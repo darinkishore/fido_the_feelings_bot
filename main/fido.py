@@ -94,13 +94,32 @@ def is_returning_user(name):
 
 precontemplation = {
     'state': 'start',
-    '`Hello, how can I help you?`': {
-        # TODO: to be filled.
+    '`Hi! I\'m Fido. How are you feeling today?`': {
+        '[{overwhelmed}]': {
+            '`I\'m sorry to hear that. Can you tell me more about what\'s been making you feel overwhelmed?`': {
+                '[{issues, boyfriend, distant}]': {
+                    '`I see. That sounds like it could be difficult to deal with. Would you like to talk about it some more?`': {
+                        '[{yes, please}]': {
+                            '`Alright. It sounds like there might be some relationship issues going on. Is that correct?`': {
+                                '[{yes}]': {
+                                    '`Okay, thanks for confirming that. Before we move forward, I want to make sure that I understand the situation correctly. It sounds like you\'ve been feeling overwhelmed because your boyfriend has been distant and you\'re not sure why. Is that accurate?`': {
+                                        '[{yes}]': {
+                                            '`Thanks for letting me know. So, do you want advice on how to approach your boyfriend or do you just need someone to listen?`': {
+                                                '[{advice}]': {
+                                                    '`I would suggest trying to have an open and honest conversation with your boyfriend about your feelings and concerns. It\'s important to express your thoughts and give him a chance to share his perspective as well. Good luck!`': 'end'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
-
-
-
 
 df = DialogueFlow('start', end_state='end')
 df.load_transitions(precontemplation)
