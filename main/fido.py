@@ -110,6 +110,8 @@ def is_returning_user(name):
 
 # key:
 # design an introductory conversation to get the user's name and age, and what they're doing in college.
+# - can store it in the natek variable format ($NAME = ..)
+# - make a get_name macro, use it to get
 # get emotion/sentiment macro (Good, bad, neutral) from the user's input.
 # design conversation to understand the user's primary releationships/conflicts (ie: who they engage with in their lives.)
 
