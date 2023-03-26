@@ -111,9 +111,14 @@ def is_returning_user(name):
 # key:
 # design an introductory conversation to get the user's name and age, and what they're doing in college.
 # - can store it in the natek variable format ($NAME = ..)
-# - make a get_name macro, use it to get
+# - make a get_name macro, use it to get name
+# - make a get_age macro, use it to get age
+
 # get emotion/sentiment macro (Good, bad, neutral) from the user's input.
-# design conversation to understand the user's primary releationships/conflicts (ie: who they engage with in their lives.)
+# design conversation to understand the user's primary relationships/conflicts (ie: who they engage with in their lives.)
+# start with conflicts. " have u been feeling like u rlly wanna fight anyone lately?"
+# - ask about the following people: friends, family, significant other, professors, classmates, etc...
+# store data in DB.
 
 # store all that shit
 
@@ -149,7 +154,10 @@ precontemplation = {
 relationships = {
     'state': 'relationships',
     '`So what\'s going on with your relationships?`': {
-    }
+
+    },
+
+
 }
 
 macros = {
