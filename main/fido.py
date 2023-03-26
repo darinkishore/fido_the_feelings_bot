@@ -101,12 +101,20 @@ def is_returning_user(name):
 # Add error states for precontempation. Dont give a fuck, etc...
 # Add and implement a get advice macro.
 
+# future:
+# implement state to gather info about student's life right now. natural conversation.
+#      Age, gender, classes?, work?, family?, friends?, etc...
+# store the information about them
+
 # figure out how to use GPT. get emotions from it.
 
-# get emotion/sentiment (Good, bad, neutral) from the user's input.
-# gather info about student's life right now
-#      Age, gender, classes?, work?, family?, friends?, etc...
-#
+# key:
+# design an introductory conversation to get the user's name and age, and what they're doing in college.
+# get emotion/sentiment macro (Good, bad, neutral) from the user's input.
+# design conversation to understand the user's primary releationships/conflicts (ie: who they engage with in their lives.)
+
+# store all that shit
+
 
 precontemplation = {
     'state': 'start',
@@ -135,6 +143,12 @@ precontemplation = {
             }
         }
 
+    }
+}
+
+relationships = {
+    'state': 'relationships',
+    '`So what\'s going on with your relationships?`': {
     }
 }
 
