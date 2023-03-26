@@ -92,6 +92,10 @@ def is_returning_user(name):
 
 # precontemplation, contemplation, and preparation
 
+# Goals: expand on the feeling stages. Do three good feelings, 3 bad feelings, 2 neutral feelings.
+# Add error states for precontempation. Dont give a fuck, etc...
+# Add and implement a get advice macro.
+
 precontemplation = {
     'state': 'start',
     '`Hi! I\'m Fido. How are you feeling today?`': {
