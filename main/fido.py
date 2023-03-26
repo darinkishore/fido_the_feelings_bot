@@ -6,18 +6,12 @@ import spacy
 import time
 import requests
 import json
-from dotenv import load_dotenv
 import os
 import sqlite3
 
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
-
-load_dotenv()
-
-openai_key = os.getenv("OPENAI_KEY")
-
 
 # User Management
 def create_database():
