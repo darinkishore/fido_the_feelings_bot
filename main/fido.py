@@ -8,6 +8,7 @@ import requests
 import json
 import os
 import sqlite3
+import utils
 
 import re
 from emora_stdm import Macro, Ngrams
@@ -25,6 +26,10 @@ def create_database():
     )
     c.execute(
         """CREATE TABLE IF NOT EXISTS song_recommendations (id INTEGER PRIMARY KEY, user_id INTEGER, song TEXT, artist TEXT, listened INTEGER, reccomended INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))"""
+    )
+    # make a table that tracks if a user is happy or sad
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS mood (id INTEGER PRIMARY KEY, user_id INTEGER, mood TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"""
     )
     conn.commit()
     conn.close()
@@ -92,13 +97,20 @@ def is_returning_user(name):
 
 # precontemplation, contemplation, and preparation
 
-# Goals: expand on the feeling stages. Do three good feelings, 3 bad feelings, 2 neutral feelings.
+# Goals: expand on the feeling stages.
 # Add error states for precontempation. Dont give a fuck, etc...
 # Add and implement a get advice macro.
 
+# figure out how to use GPT. get emotions from it.
+
+# get emotion/sentiment (Good, bad, neutral) from the user's input.
+# gather info about student's life right now
+#      Age, gender, classes?, work?, family?, friends?, etc...
+#
+
 precontemplation = {
     'state': 'start',
-    '`Hi! I\'m Fido. How are you feeling today?`': {
+    '`Hi! I\'m Fido. What\'s on your mind?`': {
         '[{overwhelmed}]': {
             '`I\'m sorry to hear that. Can you tell me more about what\'s been making you feel overwhelmed?`': {
                 '[{issues, boyfriend, distant}]': {
@@ -122,11 +134,19 @@ precontemplation = {
                 }
             }
         }
+
     }
+}
+
+macros = {
+    'GPTJSON': utils.MacroGPTJSON(),
+
+
 }
 
 df = DialogueFlow('start', end_state='end')
 df.load_transitions(precontemplation)
+df.add_macros(macros)
 
 if __name__ == '__main__':
     df.run()
