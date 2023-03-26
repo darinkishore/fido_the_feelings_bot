@@ -115,7 +115,6 @@ def is_returning_user(name):
 
 # store all that shit
 
-
 precontemplation = {
     'state': 'start',
     '`Hi! I\'m Fido. What\'s on your mind?`': {
@@ -142,7 +141,6 @@ precontemplation = {
                 }
             }
         }
-
     }
 }
 
