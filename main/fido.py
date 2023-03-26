@@ -6,11 +6,18 @@ import spacy
 import time
 import requests
 import json
+from dotenv import load_dotenv
+import os
 import sqlite3
 
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
+
+load_dotenv()
+
+openai_key = os.getenv("OPENAI_KEY")
+
 
 # User Management
 def create_database():
@@ -88,7 +95,10 @@ def is_returning_user(name):
     return visits is not None
 
 
-transitions = {
+
+# precontemplation, contemplation, and preparation
+
+precontemplation = {
     'state': 'start',
     '`Hello, how can I help you?`': {
         # TODO: to be filled.
@@ -99,7 +109,7 @@ transitions = {
 
 
 df = DialogueFlow('start', end_state='end')
-df.load_transitions(transitions)
+df.load_transitions(precontemplation)
 
 if __name__ == '__main__':
     df.run()

@@ -2,5 +2,8 @@
 
 ## Instructions
 
-* Create an openai_api.txt file under the resources directory, and add your OpenAI API key to it.
+* Create a file with name ".env"  under the resources directory, and add the line ```OPENAI_KEY=XXX``` where XXX is your OpenAI API key.
+* Install python-dotenv with ```pip install python-dotenv```
+* 
+
 
