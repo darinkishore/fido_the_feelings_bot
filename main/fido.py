@@ -124,31 +124,34 @@ def is_returning_user(name):
 
 precontemplation = {
     'state': 'start',
-    '`Hi! I\'m Fido. What\'s on your mind?`': {
-        '[{overwhelmed}]': {
-            '`I\'m sorry to hear that. Can you tell me more about what\'s been making you feel overwhelmed?`': {
-                '[{issues, boyfriend, distant}]': {
-                    '`I see. That sounds like it could be difficult to deal with. Would you like to talk about it some more?`': {
-                        '[{yes, please}]': {
-                            '`Alright. It sounds like there might be some relationship issues going on. Is that correct?`': {
-                                '[{yes}]': {
-                                    '`Okay, thanks for confirming that. Before we move forward, I want to make sure that I understand the situation correctly. It sounds like you\'ve been feeling overwhelmed because your boyfriend has been distant and you\'re not sure why. Is that accurate?`': {
-                                        '[{yes}]': {
-                                            '`Thanks for letting me know. So, do you want advice on how to approach your boyfriend or do you just need someone to listen?`': {
-                                                '[{advice}]': {
-                                                    '`I would suggest trying to have an open and honest conversation with your boyfriend about your feelings and concerns. It\'s important to express your thoughts and give him a chance to share his perspective as well. Good luck!`': 'end'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    '`Hello, I\'m Fido! How are you today?`': {
+        '{good, great, fine, not bad}': {
+            '`That\'s great to hear! Is there something specific you\'d like to talk about or just have a casual chat?`': 'casual_chat'
+        },
+        '{bad, not good, terrible, sad, unhappy}': {
+            '`I\'m sorry to hear that. Would you like to talk about what\'s bothering you or just have a casual chat to take your mind off things?`': 'casual_chat'
+        },
+        'error': {
+            '`No worries. If you ever want to talk or need someone to listen, I\'m here for you. Let\'s have a casual chat!`': 'casual_chat'
         }
-    }
+    },
+    'state': 'casual_chat',
+    '`Alright! What would you like to chat about? We could talk about hobbies, movies, music, or something else you\'re interested in.`': {
+        '{hobbies, interests, activities}': {
+            '`What are some of your favorite hobbies or interests?`': 'casual_chat_response'
+        },
+        '{movies, films, cinema}': {
+            '`What kind of movies do you enjoy? Any favorite genres or films?`': 'casual_chat_response'
+        },
+        '{music, songs, bands, artists}': {
+            '`What type of music do you like? Any favorite artists or songs?`': 'casual_chat_response'
+        },
+        'error': {
+            '`It\'s alright if you\'re not sure. If you ever want to chat or need someone to listen, feel free to reach out to me. Have a great day!`': 'end'
+        }
+    },
+    'state': 'casual_chat_response',
+    '`That sounds interesting! I always enjoy learning about new things. If you ever want to talk about your experiences or issues, feel free to reach out to me anytime. Have a great day!`': 'end'
 }
 
 relationships = {
