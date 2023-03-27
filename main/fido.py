@@ -154,19 +154,9 @@ precontemplation = {
     '`That sounds interesting! I always enjoy learning about new things. If you ever want to talk about your experiences or issues, feel free to reach out to me anytime. Have a great day!`': 'end'
 }
 
-relationships = {
-    'state': 'relationships',
-    '`So what\'s going on with your relationships?`': {
-
-    },
-
-
-}
 
 macros = {
     'GPTJSON': utils.MacroGPTJSON(),
-
-
 }
 
 df = DialogueFlow('start', end_state='end')
