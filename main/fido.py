@@ -8,10 +8,65 @@ import requests
 import json
 import os
 import sqlite3
+import openai
 
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
+
+PATH_API_KEY = 'resources/openai_api.txt'
+
+
+def api_key(filepath=PATH_API_KEY) -> str:
+    fin = open(filepath)
+    return fin.readline().strip()
+
+
+openai.api_key = api_key()
+
+
+def gpt_text_completion(input: str, regex: Pattern = None, model: str = 'gpt-3.5-turbo') -> str:
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=[{'role': 'user', 'content': input}],
+    )
+    output = response['choices'][0]['message']['content'].strip()
+
+    if regex is not None:
+        m = regex.search(output)
+        output = m.group().strip() if m else None
+
+    return output
+
+class MacroGetFunFact(Macro):
+    def run(self, ngrams: Ngrams, vars: dict, args: list):
+        prompt = 'write a fun fact in the one line JSON format: '
+        output = gpt_text_completion(prompt)
+
+        if output:
+            d = json.loads(output)
+            vars['FUN_FACT'] = d['fact']
+            return True
+        else:
+            return False
+
+
+class MacroCallName(Macro):
+    def run(self, ngrams: Ngrams, vars: dict, args: list):
+        prompt = 'How does the speaker want to be called? Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: '
+        prompt += ngrams.raw_text().strip()
+        output = gpt_text_completion(prompt)
+
+
+
+        if output:
+            d = json.loads(output)
+            vars['CALL_NAMES'] = ', '.join(d['call_names'])
+            vars['NICKNAME'] = d['call_names'][0]
+            return True
+        else:
+            return False
+
 
 # User Management
 def create_database():
@@ -88,7 +143,19 @@ def is_returning_user(name):
     conn.close()
     return visits is not None
 
+introduction = {
+    'state': 'start',
+    '`Hi! I\'m Fido. What\'s your name?`':{
+        '#CALL_NAME':{
+            '`It\'s nice to meet you` $NICKNAME `! Do you want to hear a fun fact?`':{
+                '#GET_FUN_FACT':{
+                    '`Ok here\'s one:` $FUN_FACT `Isn\'t that cool!`': 'end'
 
+                }
+            }
+        }
+    }
+}
 
 # precontemplation, contemplation, and preparation
 
@@ -121,8 +188,15 @@ precontemplation = {
     }
 }
 
+macros = {
+    'CALL_NAME': MacroCallName(),
+    'GET_FUN_FACT': MacroGetFunFact()
+}
+
 df = DialogueFlow('start', end_state='end')
 df.load_transitions(precontemplation)
+df.load_transitions(introduction)
+df.add_macros(macros)
 
 if __name__ == '__main__':
     df.run()
