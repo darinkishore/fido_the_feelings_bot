@@ -10,6 +10,7 @@ import os
 import sqlite3
 import openai
 from re import Pattern
+from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion
 
 import re
 from emora_stdm import Macro, Ngrams
@@ -173,7 +174,6 @@ macros = {
 }
 
 df = DialogueFlow('start', end_state='end')
-#df.load_transitions(precontemplation)
 df.load_transitions(introduction)
 df.load_transitions(hobbies)
 df.add_macros(macros)
