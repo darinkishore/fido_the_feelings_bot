@@ -8,11 +8,66 @@ import requests
 import json
 import os
 import sqlite3
-import utils
+import openai
+from re import Pattern
 
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
+
+PATH_API_KEY = '../resources/openai_api.txt'
+
+
+def api_key(filepath=PATH_API_KEY) -> str:
+    fin = open(filepath)
+    return fin.readline().strip()
+
+
+openai.api_key = api_key()
+
+
+def gpt_text_completion(input: str, regex: Pattern = None, model: str = 'gpt-3.5-turbo') -> str:
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=[{'role': 'user', 'content': input}],
+    )
+    output = response['choices'][0]['message']['content'].strip()
+
+    if regex is not None:
+        m = regex.search(output)
+        output = m.group().strip() if m else None
+
+    return output
+
+class MacroGetFunFact(Macro):
+    def run(self, ngrams: Ngrams, vars: dict, args: list):
+        prompt = 'write a fun fact in the one line JSON format: '
+        output = gpt_text_completion(prompt)
+
+        if output:
+            d = json.loads(output)
+            vars['FUN_FACT'] = d['fact']
+            return True
+        else:
+            return False
+
+
+class MacroCallName(Macro):
+    def run(self, ngrams: Ngrams, vars: dict, args: list):
+        prompt = 'How does the speaker want to be called? Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: '
+        prompt += ngrams.raw_text().strip()
+        output = gpt_text_completion(prompt)
+
+
+
+        if output:
+            d = json.loads(output)
+            vars['CALL_NAMES'] = ', '.join(d['call_names'])
+            vars['NICKNAME'] = d['call_names'][0]
+            return True
+        else:
+            return False
+
 
 # User Management
 def create_database():
@@ -26,10 +81,6 @@ def create_database():
     )
     c.execute(
         """CREATE TABLE IF NOT EXISTS song_recommendations (id INTEGER PRIMARY KEY, user_id INTEGER, song TEXT, artist TEXT, listened INTEGER, reccomended INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))"""
-    )
-    # make a table that tracks if a user is happy or sad
-    c.execute(
-        """CREATE TABLE IF NOT EXISTS mood (id INTEGER PRIMARY KEY, user_id INTEGER, mood TEXT, FOREIGN KEY(user_id) REFERENCES users(id))"""
     )
     conn.commit()
     conn.close()
@@ -93,38 +144,25 @@ def is_returning_user(name):
     conn.close()
     return visits is not None
 
+introduction = {
+    'state': 'start',
+    '`Hi! I\'m Fido. What\'s your name?`':{
+        '#CALL_NAME':{
+            '`It\'s nice to meet you` $NICKNAME `! Do you want to hear a fun fact?`':{
+                '#GET_FUN_FACT':{
+                    '`Ok here\'s one:` $FUN_FACT `Isn\'t that cool!`': 'end'
 
+                }
+            }
+        }
+    }
+}
 
 # precontemplation, contemplation, and preparation
 
-# Goals: expand on the feeling stages.
-# Add error states for precontempation. Dont give a fuck, etc...
-# Add and implement a get advice macro.
-
-# future:
-# implement state to gather info about student's life right now. natural conversation.
-#      Age, gender, classes?, work?, family?, friends?, etc...
-# store the information about them
-
-# figure out how to use GPT. get emotions from it.
-
-# key:
-# design an introductory conversation to get the user's name and age, and what they're doing in college.
-# - can store it in the natek variable format ($NAME = ..)
-# - make a get_name macro, use it to get name
-# - make a get_age macro, use it to get age
-
-# get emotion/sentiment macro (Good, bad, neutral) from the user's input.
-# design conversation to understand the user's primary relationships/conflicts (ie: who they engage with in their lives.)
-# start with conflicts. " have u been feeling like u rlly wanna fight anyone lately?"
-# - ask about the following people: friends, family, significant other, professors, classmates, etc...
-# store data in DB.
-
-# store all that shit
-
 precontemplation = {
     'state': 'start',
-    '`Hi! I\'m Fido. What\'s on your mind?`': {
+    '`Hi! I\'m Fido. How are you feeling today?`': {
         '[{overwhelmed}]': {
             '`I\'m sorry to hear that. Can you tell me more about what\'s been making you feel overwhelmed?`': {
                 '[{issues, boyfriend, distant}]': {
@@ -151,23 +189,14 @@ precontemplation = {
     }
 }
 
-relationships = {
-    'state': 'relationships',
-    '`So what\'s going on with your relationships?`': {
-
-    },
-
-
-}
-
 macros = {
-    'GPTJSON': utils.MacroGPTJSON(),
-
-
+    'CALL_NAME': MacroCallName(),
+    'GET_FUN_FACT': MacroGetFunFact()
 }
 
 df = DialogueFlow('start', end_state='end')
-df.load_transitions(precontemplation)
+#df.load_transitions(precontemplation)
+df.load_transitions(introduction)
 df.add_macros(macros)
 
 if __name__ == '__main__':
