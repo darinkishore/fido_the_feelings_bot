@@ -15,6 +15,7 @@ from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
+from enum import Enum
 
 PATH_API_KEY = '../resources/openai_api.txt'
 
@@ -113,34 +114,109 @@ introduction = {
 
 # precontemplation, contemplation, and preparation
 
-precontemplation = {
-    'state': 'start',
-    '`Hi! I\'m Fido. How are you feeling today?`': {
-        '[{overwhelmed}]': {
-            '`I\'m sorry to hear that. Can you tell me more about what\'s been making you feel overwhelmed?`': {
-                '[{issues, boyfriend, distant}]': {
-                    '`I see. That sounds like it could be difficult to deal with. Would you like to talk about it some more?`': {
-                        '[{yes, please}]': {
-                            '`Alright. It sounds like there might be some relationship issues going on. Is that correct?`': {
-                                '[{yes}]': {
-                                    '`Okay, thanks for confirming that. Before we move forward, I want to make sure that I understand the situation correctly. It sounds like you\'ve been feeling overwhelmed because your boyfriend has been distant and you\'re not sure why. Is that accurate?`': {
-                                        '[{yes}]': {
-                                            '`Thanks for letting me know. So, do you want advice on how to approach your boyfriend or do you just need someone to listen?`': {
-                                                '[{advice}]': {
-                                                    '`I would suggest trying to have an open and honest conversation with your boyfriend about your feelings and concerns. It\'s important to express your thoughts and give him a chance to share his perspective as well. Good luck!`': 'end'
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+
+# df to get/store hobbies
+# assume this comes after fun fact
+
+hobbies = {
+    'state': 'hobbies',
+    '`What are some of the hobbies that you enjoy?`': {
+        '#GET_HOBBY_STATEMENT': {  # to access hobby statement, use $HOBBY_STATEMENT
+            "`Have you tried similar hobbies to $HOBBY? I can suggest some if you\'d like.": {
+              '[{yes, yeah, interested, suggested}]': {
+                  #SIMILAR_HOBBY align with $HOBBY and your interests. Does this recommendation line up with your wants?
+              }
             }
         }
     }
 }
+
+professors = {
+    'state': 'professors',
+    '`Have you had any problems with professors recently? I know how annoying they can be.`':{
+        '#GET_PROFESSOR_PROBLEM_ADVICE':{
+            '#IF($NO_PROFESSOR_PROBLEM = True)':{
+                '`Ok! Let me know if they ever give you any trouble. I know how tough they can be.`': 'end'
+            },
+            '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': 'end'
+        }
+
+    }
+}
+
+def get_call_name(vars: Dict[str, Any]):
+    ls = vars[User.call_name.name]
+    return ls
+
+
+def get_fun_fact(vars: Dict[str, Any]):
+    return vars['FUN_FACT']
+
+
+def get_hobby(vars: Dict[str, Any]):
+    return vars['HOBBY']
+
+
+def why_like_hobby(vars: Dict[str, Any]):
+    return vars['WHY_LIKE_HOBBY']
+
+
+def set_call_names(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars[User.call_name.name] = user[User.call_name.name]
+    add_user(vars[User.call_name.name])
+
+
+def set_fun_fact(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['FUN_FACT'] = user['FUN_FACT']
+
+
+def set_user_hobby(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['HOBBY'] = user['HOBBY']
+    generate_hobby_statement(vars)
+    if vars['HOBBY'] == 'n/a':
+        vars['NO_HOBBY'] = bool(True)
+
+def set_professor_problem(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['PROBLEM'] = user['PROBLEM']
+    generate_problem_statement(vars)
+    if vars['PROFESSOR_PROBLEM'] == 'n/a':
+        vars['NO_PROFESSOR_PROBLEM'] = bool(True)
+
+def get_professor_problem(vars: Dict[str, Any]):
+    return vars['PROFESSOR_PROBLEM']
+
+def generate_problem_statement(vars: Dict[str, Any]):
+    # if vars[hobby] is a list, then randomly select one
+    # else, just use vars[hobby]
+    problem = vars['PROBLEM']
+
+    if isinstance(problem, list):
+        hobby = random.choice(problem)
+        vars['PROBLEM'] = problem
+
+    prompt = f"Give advice about {problem}"
+    output = gpt_completion(prompt)
+    vars['PROBLEM_STATEMENT'] = output
+
+
+def generate_hobby_statement(vars: Dict[str, Any]):
+    # if vars[hobby] is a list, then randomly select one
+    # else, just use vars[hobby]
+    hobby = vars['HOBBY']
+
+    if isinstance(hobby, list):
+        hobby = random.choice(hobby)
+        vars['HOBBY'] = hobby
+
+    prompt = f"Give me a statement about why you like {hobby}"
+    output = gpt_completion(prompt)
+    vars['HOBBY_STATEMENT'] = output
+
+def generate_similar_hobby(vars: Dict[str, Any]):
+    # if vars[similar_hobby] is similar to vars[hobby], then suggest it to the user
+    similar_hobby = vars['SIMILAR_HOBBY']
+
+
 
 macros = {
     'SET_CALL_NAME': MacroGPTJSON(
