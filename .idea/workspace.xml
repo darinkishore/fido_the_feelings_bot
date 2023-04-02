@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9e7a283-1fc7-4312-af4d-8f822102914b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Resources/openai.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
-    </list>
+    <list default="true" id="a9e7a283-1fc7-4312-af4d-8f822102914b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,6 +59,7 @@
       <workItem from="1679862047350" duration="167000" />
       <workItem from="1679862221665" duration="2615000" />
       <workItem from="1680208485508" duration="328000" />
+      <workItem from="1680441554551" duration="44000" />
     </task>
     <servers />
   </component>
