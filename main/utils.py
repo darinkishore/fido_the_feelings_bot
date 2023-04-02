@@ -46,7 +46,7 @@ class MacroGPTJSON(Macro):
 
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         examples = f'{self.full_ex} or {self.empty_ex} if unavailable' if self.empty_ex else self.full_ex
-        prompt = f'{self.request} Respond in the JSON schema such as {examples}: {ngrams.raw_text().strip()}'
+        prompt = f'{self.request} Respond in the JSON schema such as {examples}: {ngrams.text().strip()}'
         output = gpt_completion(prompt)
         if not output: return False
 
@@ -71,6 +71,16 @@ class MacroNLG(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         return self.generate(vars)
 
+class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
+    def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
+        MacroGPTJSON.__init__(self, request, full_ex, empty_ex, set_variables)
+        MacroNLG.__init__(self, generate)
+
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        success = MacroGPTJSON.run(self, ngrams, vars, args)
+        if success:
+            return MacroNLG.run(self, ngrams, vars, args)
+        return False
 
 def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
