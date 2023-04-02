@@ -9,12 +9,13 @@ import json
 import os
 import sqlite3
 import openai
+from re import Pattern
 
 import re
 from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
 
-PATH_API_KEY = 'resources/openai_api.txt'
+PATH_API_KEY = '../resources/openai_api.txt'
 
 
 def api_key(filepath=PATH_API_KEY) -> str:
@@ -194,7 +195,7 @@ macros = {
 }
 
 df = DialogueFlow('start', end_state='end')
-df.load_transitions(precontemplation)
+#df.load_transitions(precontemplation)
 df.load_transitions(introduction)
 df.add_macros(macros)
 
