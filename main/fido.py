@@ -23,8 +23,9 @@ PATH_API_KEY = '../resources/openai_api.txt'
 def api_key(filepath=PATH_API_KEY) -> str:
     fin = open(filepath)
     return fin.readline().strip()
-openai.api_key = api_key()
 
+
+openai.api_key = api_key()
 
 """
 TODO:
@@ -35,6 +36,7 @@ TODO:
 - add partner dialog handling -> Darin
 - PLEASE get this done by Tuesday night. We need to have a working prototype by then.
 """
+
 
 # User Management
 def create_database():
@@ -127,9 +129,25 @@ hobbies = {
     '`What are some of the hobbies that you enjoy?`': {
         '#GET_HOBBY_STATEMENT': {  # to access hobby statement, use $HOBBY_STATEMENT
             "`Have you tried similar hobbies to $HOBBY? I can suggest some if you\'d like.": {
-              '[{yes, yeah, interested, suggested}]': {
-                  #SIMILAR_HOBBY align with $HOBBY and your interests. Does this recommendation line up with your wants?
-              }
+                '[{yes, yeah, interested, suggested}]': {
+                    # SIMILAR_HOBBY align with $HOBBY and your interests. Does this recommendation line up with your wants?
+                }
+            }
+        }
+    }
+}
+
+hometown = {
+    'state': 'hometown',
+    '`Where are you from originally?`': {
+        '#GET_HOMETOWN_NAME': {
+            '`Oh, I\'ve heard of that place. How has` $HOMETOWN `treated you?`': {
+                '#GET_LIKES_HOMETOWN': {
+                    '#IF($NO_HOMETOWN_PROBLEM = True)': {
+                        '`That\'s great! Glad to hear you enjoy where you\'re from! Now, let\' talk about Emory`': 'professors'
+                    },
+                    '`I\'m sorry to hear that! I hope Emory\'s campus & community have treated you much better!`': 'professors'
+                }
             }
         }
     }
@@ -137,9 +155,9 @@ hobbies = {
 
 professors = {
     'state': 'professors',
-    '`Have you had any problems with professors recently? I know how annoying they can be.`':{
-        '#GET_PROFESSOR_PROBLEM_ADVICE':{
-            '#IF($NO_PROFESSOR_PROBLEM = True)':{
+    '`Have you had any problems with professors recently? I know how annoying they can be.`': {
+        '#GET_PROFESSOR_PROBLEM_ADVICE': {
+            '#IF($NO_PROFESSOR_PROBLEM = True)': {
                 '`Ok! Let me know if they ever give you any trouble. I know how tough they can be.`': 'end'
             },
             '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': 'end'
@@ -147,6 +165,7 @@ professors = {
 
     }
 }
+
 
 def get_call_name(vars: Dict[str, Any]):
     ls = vars[User.call_name.name]
@@ -180,14 +199,29 @@ def set_user_hobby(vars: Dict[str, Any], user: Dict[str, Any]):
     if vars['HOBBY'] == 'n/a':
         vars['NO_HOBBY'] = bool(True)
 
+
+def set_user_hometown(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['HOMETOWN'] = user['HOMETOWN']
+
+
+def set_user_likeshometown(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['LIKES_HOMETOWN'] = user['LIKES_HOMETOWN']
+    if vars['LIKES_HOMETOWN'] == 'YES':
+        vars['NO_HOMETOWN_PROBLEM'] = bool(True)
+    else:
+        vars['NO_HOMETOWN_PROBLEM'] = bool(False)
+
+
 def set_professor_problem(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['PROBLEM'] = user['PROBLEM']
     generate_problem_statement(vars)
     if vars['PROFESSOR_PROBLEM'] == 'n/a':
         vars['NO_PROFESSOR_PROBLEM'] = bool(True)
 
+
 def get_professor_problem(vars: Dict[str, Any]):
     return vars['PROFESSOR_PROBLEM']
+
 
 def generate_problem_statement(vars: Dict[str, Any]):
     # if vars[hobby] is a list, then randomly select one
@@ -216,10 +250,10 @@ def generate_hobby_statement(vars: Dict[str, Any]):
     output = gpt_completion(prompt)
     vars['HOBBY_STATEMENT'] = output
 
+
 def generate_similar_hobby(vars: Dict[str, Any]):
     # if vars[similar_hobby] is similar to vars[hobby], then suggest it to the user
     similar_hobby = vars['SIMILAR_HOBBY']
-
 
 
 macros = {
@@ -240,6 +274,18 @@ macros = {
         {'Hobbies': ["Basketball", "Soccer"]},
         {'Hobbies': "n/a"},
         set_user_hobby,
+    ),
+    '#GET_HOMETOWN_NAME': MacroGPTJSONNLG(
+        'What is the speakers hometown? Respond in the one-line JSON format such as {"HOMETOWN": ["Atlanta"]}: ',
+        {'HOMETOWN': ["Detroit"]},
+        {'HOMETOWN': "n/a"},
+        set_user_hometown,
+    ),
+    '#GET_LIKES_HOMETOWN': MacroGPTJSONNLG(
+        'Does the speaker like their hometown? Respond in the one-line JSON format such as {"LIKES_HOMETOWN: ["YES"]}: ',
+        {'LIKES_HOMETOWN': ["NO"]},
+        None,
+        set_user_likeshometown,
     ),
     'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
         'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',

@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9e7a283-1fc7-4312-af4d-8f822102914b" name="Changes" comment="Added objective list.">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_26_23,_4_04_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fido_the_feelings_bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fido_the_feelings_bot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/main/data.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
     </list>
-    <list id="62df4774-158d-41ec-b86e-3668f39350f9" name="Changes by ej717" comment="Changes by ej717">
-      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
-    </list>
-    <list id="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" name="Changes by rapha" comment="Changes by rapha">
-      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
-    </list>
+    <list id="62df4774-158d-41ec-b86e-3668f39350f9" name="Changes by ej717" comment="Changes by ej717" />
+    <list id="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" name="Changes by rapha" comment="Changes by rapha" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,17 +25,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/main/fido.py">
-      <ranges>
-        <range start1="31" end1="31" start2="31" end2="32" changelist="a9e7a283-1fc7-4312-af4d-8f822102914b" />
-        <range start1="33" end1="34" start2="34" end2="35" changelist="a9e7a283-1fc7-4312-af4d-8f822102914b" />
-        <range start1="164" end1="164" start2="165" end2="168" changelist="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" />
-        <range start1="219" end1="219" start2="223" end2="224" changelist="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" />
-        <range start1="244" end1="246" start2="249" end2="251" changelist="62df4774-158d-41ec-b86e-3668f39350f9" />
-      </ranges>
-    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -197,7 +183,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added objective list." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/fido_the_feelings_bot$fido.coverage" NAME="fido Coverage Results" MODIFIED="1680469112078" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
+    <SUITE FILE_PATH="coverage/fido_the_feelings_bot$fido.coverage" NAME="fido Coverage Results" MODIFIED="1680669422877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
     <SUITE FILE_PATH="coverage/fido_the_feelings_bot$scratch_2.coverage" NAME="scratch_2 Coverage Results" MODIFIED="1679882143029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
   </component>
 </project>
