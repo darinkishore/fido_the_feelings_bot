@@ -347,8 +347,8 @@ macros = {
     ),
     'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
         'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
-        {'Hobbies': ["workload", "communication"]},
-        {'Hobbies': "n/a"},
+        {'Problems': ["workload", "communication"]},
+        {'Problems': "n/a"},
         set_professor_problem,
     ),
     'GET_CALL_NAME': MacroNLG(get_call_name),
