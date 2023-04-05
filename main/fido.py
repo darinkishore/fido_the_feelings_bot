@@ -167,11 +167,33 @@ hometown = {
 professors = {
     'state': 'professors',
     '`Have you had any problems with professors recently? I know how annoying they can be.`': {
+        'state': 'professor advice',
         '#GET_PROFESSOR_PROBLEM_ADVICE': {
             '#IF($NO_PROFESSOR_PROBLEM = True)': {
-                '`Ok! Let me know if they ever give you any trouble. I know how tough they can be.`': 'end'
+                '`Ok! Let me know if they ever give you any trouble. I know how tough they can be. Is there something else I can help with?`': 'end'
             },
-            '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': 'end'
+            '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': {
+                '[{yes, yeah, thank, yep}]':{
+                    '`Happy to help! Let me know if you need to talk more about it. I am always here to listen. Is there anything else you want to discuss?`': {
+                        '[{yes, yeah, sure, yup, yep}]':{
+                            '`Ok! What do you want to talk about?`':'end'
+                        },
+                        'error':{
+                            '`Alright! I\'ll be here if you need to talk again! Have a good day !`': 'end'
+                        }
+                    }
+                },
+                'error':{
+                    '`Ok, I\'m sorry I wasn\'t more helpful. I can offer more advice. Would that be helpful?`':{
+                        '[{yes, yeah, course, sure, yep}]':{
+                            '`Great! Maybe give me some more details this time, I\'ll see if I can do better!`' : 'professor advice'
+                        },
+                        'error':{
+                            '`If something is really bothering you, try talking to a friend or administrator! I\'m sorry I couldn\'t help this time. Let me know if you need anything else!`':'end'
+                        }
+                    }
+                }
+            }
         }
 
     }
