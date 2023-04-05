@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9e7a283-1fc7-4312-af4d-8f822102914b" name="Changes" comment="Added objective list.">
-      <change beforePath="$PROJECT_DIR$/.idea/fido_the_feelings_bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fido_the_feelings_bot.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/data.db" beforeDir="false" afterPath="$PROJECT_DIR$/main/data.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
     </list>
-    <list id="62df4774-158d-41ec-b86e-3668f39350f9" name="Changes by ej717" comment="Changes by ej717" />
-    <list id="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" name="Changes by rapha" comment="Changes by rapha" />
+    <list id="62df4774-158d-41ec-b86e-3668f39350f9" name="Changes by ej717" comment="Changes by ej717">
+      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
+    </list>
+    <list id="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" name="Changes by rapha" comment="Changes by rapha">
+      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,6 +27,18 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/main/fido.py">
+      <ranges>
+        <range start1="167" end1="167" start2="167" end2="196" changelist="a9e7a283-1fc7-4312-af4d-8f822102914b" />
+        <range start1="184" end1="184" start2="213" end2="217" changelist="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" />
+        <range start1="255" end1="255" start2="288" end2="289" changelist="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" />
+        <range start1="256" end1="256" start2="290" end2="308" changelist="a9e7a283-1fc7-4312-af4d-8f822102914b" />
+        <range start1="291" end1="293" start2="343" end2="345" changelist="62df4774-158d-41ec-b86e-3668f39350f9" />
+        <range start1="298" end1="299" start2="350" end2="375" changelist="a9e7a283-1fc7-4312-af4d-8f822102914b" />
+      </ranges>
+    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -62,9 +76,10 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/conversational-ai/bin/python" />
+      <option name="SDK_NAME" value="Python 3.10 (conversational-ai)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -183,7 +198,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added objective list." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/fido_the_feelings_bot$fido.coverage" NAME="fido Coverage Results" MODIFIED="1680669422877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
+    <SUITE FILE_PATH="coverage/fido_the_feelings_bot$fido.coverage" NAME="fido Coverage Results" MODIFIED="1680469112078" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/main" />
     <SUITE FILE_PATH="coverage/fido_the_feelings_bot$scratch_2.coverage" NAME="scratch_2 Coverage Results" MODIFIED="1679882143029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
   </component>
 </project>
