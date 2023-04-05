@@ -224,6 +224,10 @@ def why_like_hobby(vars: Dict[str, Any]):
     return vars['WHY_LIKE_HOBBY']
 
 
+def get_similar_hobby(vars: DICT[str, Any]):
+    return vars['SIMILAR_HOBBY']
+
+
 def set_call_names(vars: Dict[str, Any], user: Dict[str, Any]):
     vars[User.call_name.name] = user[User.call_name.name]
     add_user(vars[User.call_name.name])
@@ -293,6 +297,7 @@ def generate_hobby_statement(vars: Dict[str, Any]):
 
 def generate_similar_hobby(vars: Dict[str, Any]):
     # if vars[similar_hobby] is similar to vars[hobby], then suggest it to the user
+    # similar to generate_hobby_statment, but adjust it to similar hobby needs
     similar_hobby = vars['SIMILAR_HOBBY']
 
 
