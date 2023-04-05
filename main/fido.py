@@ -29,9 +29,10 @@ openai.api_key = api_key()
 """
 TODO:
 - Get/store hometown and how they feel about it (good/bad), see if they like the place - Eric
+- Add roommate dialog branch -> Eric
 - Add professor-relate didalog handling -> ezra
 - Fix hobbies, add Friends dialog handling -> raphael
-- add roommate/partner dialog handling -> Darin
+- add partner dialog handling -> Darin
 - PLEASE get this done by Tuesday night. We need to have a working prototype by then.
 """
 
