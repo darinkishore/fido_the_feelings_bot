@@ -128,10 +128,21 @@ hobbies = {
     'state': 'hobbies',
     '`What are some of the hobbies that you enjoy?`': {
         '#GET_HOBBY_STATEMENT': {  # to access hobby statement, use $HOBBY_STATEMENT
-            "`Have you tried similar hobbies to $HOBBY? I can suggest some if you\'d like.": {
+            "`Have you tried similar hobbies to `$HOBBY`? I can suggest some if you\'d like.": {
                 '[{yes, yeah, interested, suggested}]': {
-                    # SIMILAR_HOBBY align with $HOBBY and your interests. Does this recommendation line up with your wants?
-                }
+                    '# SIMILAR_HOBBY `align with` $HOBBY `and your interests. Does this recommendation line up with your wants?`' : {
+                    },
+                        '[{yes, yeah, interested, suggested}]': {
+                            'Perfect! I\'m glad that I was able to recommend you a new hobby that you\'d like to try': 'end'
+
+                    }
+                },
+                '[{no, nope, nah, no thanks, not really, not now, not today}]':{
+                    '`Ok, maybe next time!`': 'end'
+                },
+                'error': {
+                    'Sorry, I didn\'t quite get that. Could you repeat that?': 'hobbies'
+                },
             }
         }
     }
