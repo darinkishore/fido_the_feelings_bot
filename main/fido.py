@@ -167,13 +167,64 @@ hometown = {
 professors = {
     'state': 'professors',
     '`Have you had any problems with professors recently? I know how annoying they can be.`': {
+        'state': 'professor advice',
         '#GET_PROFESSOR_PROBLEM_ADVICE': {
             '#IF($NO_PROFESSOR_PROBLEM = True)': {
-                '`Ok! Let me know if they ever give you any trouble. I know how tough they can be.`': 'end'
+                '`Ok! Let me know if they ever give you any trouble. I know how tough they can be. Is there something else I can help with?`': 'end'
             },
-            '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': 'end'
+            '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': {
+                '[{yes, yeah, thank, yep}]':{
+                    '`Happy to help! Let me know if you need to talk more about it. I am always here to listen. Is there anything else you want to discuss?`': {
+                        '[{yes, yeah, sure, yup, yep}]':{
+                            '`Ok! What do you want to talk about?`':'end'
+                        },
+                        'error':{
+                            '`Alright! I\'ll be here if you need to talk again! Have a good day !`': 'end'
+                        }
+                    }
+                },
+                'error':{
+                    '`Ok, I\'m sorry I wasn\'t more helpful. I can offer more advice. Would that be helpful?`':{
+                        '[{yes, yeah, course, sure, yep}]':{
+                            '`Great! Maybe give me some more details this time, I\'ll see if I can do better!`' : 'professor advice'
+                        },
+                        'error':{
+                            '`If something is really bothering you, try talking to a friend or administrator! I\'m sorry I couldn\'t help this time. Let me know if you need anything else!`':'end'
+                        }
+                    }
+                }
+            }
         }
 
+    }
+}
+
+partners = {
+    'state': 'partners',
+    '`How is your relationship with your partner?`': {
+        '#GET_PARTNER_STATUS': {
+            'good': {
+                '`That\'s wonderful to hear! What do you think makes your relationship so strong?`': {
+                    '#GET_STRONG_ATTRIBUTE': {
+                        '`It\'s great that $STRONG_ATTRIBUTE plays a significant role in your relationship. Remember to keep nurturing your bond and supporting each other. Have a great day!`': 'end',
+                    }
+                }
+            },
+            'bad': {
+                '`I\'m sorry to hear that your relationship is going through a tough time. Can you tell me more about the challenges you\'re facing?`': {
+                    '#GET_CHALLENGE': {
+                        '`It sounds like $CHALLENGE is causing some issues in your relationship. Here is some advice:` $PARTNER_ADVICE `I hope it helps, and remember, open communication and understanding are key to resolving conflicts. Take care!`': 'end',
+                    }
+                }
+            },
+            'complicated': {
+                '`Relationships can be complicated sometimes. Can you tell me more about the aspects of your relationship that are causing confusion or mixed feelings?`': {
+                    '#GET_CONFUSION': {
+                        '`It seems like $CONFUSION is making things a bit unclear in your relationship. Here is a suggestion:` $PARTNER_ADVICE `Remember, communication and understanding are essential in addressing these complexities. Good luck!`': 'end',
+                    }
+                }
+            },
+        }
     }
 }
 
@@ -193,6 +244,10 @@ def get_hobby(vars: Dict[str, Any]):
 
 def why_like_hobby(vars: Dict[str, Any]):
     return vars['WHY_LIKE_HOBBY']
+
+
+def get_similar_hobby(vars: DICT[str, Any]):
+    return vars['SIMILAR_HOBBY']
 
 
 def set_call_names(vars: Dict[str, Any], user: Dict[str, Any]):
@@ -264,7 +319,26 @@ def generate_hobby_statement(vars: Dict[str, Any]):
 
 def generate_similar_hobby(vars: Dict[str, Any]):
     # if vars[similar_hobby] is similar to vars[hobby], then suggest it to the user
+    # similar to generate_hobby_statment, but adjust it to similar hobby needs
     similar_hobby = vars['SIMILAR_HOBBY']
+
+
+def set_partner_status(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['PARTNER_STATUS'] = user['PARTNER_STATUS']
+
+
+def set_strong_attribute(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['STRONG_ATTRIBUTE'] = user['STRONG_ATTRIBUTE']
+
+
+def set_challenge(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['CHALLENGE'] = user['CHALLENGE']
+    generate_partner_advice(vars)
+
+
+def set_confusion(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['CONFUSION'] = user['CONFUSION']
+    generate_partner_advice(vars)
 
 
 macros = {
@@ -300,14 +374,38 @@ macros = {
     ),
     'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
         'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
-        {'Hobbies': ["workload", "communication"]},
-        {'Hobbies': "n/a"},
+        {'Problems': ["workload", "communication"]},
+        {'Problems': "n/a"},
         set_professor_problem,
     ),
     'GET_CALL_NAME': MacroNLG(get_call_name),
     'GET_FUN_FACT': MacroNLG(get_fun_fact),
     'GET_USER_HOBBY': MacroNLG(get_hobby),
-    'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem)
+    'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem),
+    'GET_PARTNER_STATUS': MacroGPTJSONNLG(
+        'What is the speaker\'s relationship status with their partner? Respond in the one-line JSON format such as {"PARTNER_STATUS": "good"}: ',
+        {'PARTNER_STATUS': "good"},
+        {'PARTNER_STATUS': "n/a"},
+        set_partner_status,
+    ),
+    'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
+        'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
+        {'STRONG_ATTRIBUTE': "communication"},
+        {'STRONG_ATTRIBUTE': "n/a"},
+        set_strong_attribute,
+    ),
+    'GET_CHALLENGE': MacroGPTJSONNLG(
+        'What is a challenge the speaker is facing in their relationship? Respond in the one-line JSON format such as {"CHALLENGE": "communication"}: ',
+        {'CHALLENGE': "communication"},
+        {'CHALLENGE': "n/a"},
+        set_challenge,
+    ),
+    'GET_CONFUSION': MacroGPTJSONNLG(
+        'What is causing confusion or mixed feelings in the speaker\'s relationship? Respond in the one-line JSON format such as {"CONFUSION": "priorities"}: ',
+        {'CONFUSION': "priorities"},
+        {'CONFUSION': "n/a"},
+        set_confusion,
+    ),
 }
 
 df = DialogueFlow('start', end_state='end')
