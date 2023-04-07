@@ -130,14 +130,14 @@ hobbies = {
         '#GET_HOBBY_STATEMENT': {  # to access hobby statement, use $HOBBY_STATEMENT
             "`Have you tried similar hobbies to `$HOBBY`? I can suggest some if you\'d like.": {
                 '[{yes, yeah, interested, suggested}]': {
-                    '# SIMILAR_HOBBY `align with` $HOBBY `and your interests. Does this recommendation line up with your wants?`' : {
+                    '# SIMILAR_HOBBY `align with` $HOBBY `and your interests. Does this recommendation line up with your wants?`': {
                     },
-                        '[{yes, yeah, interested, suggested}]': {
-                            'Perfect! I\'m glad that I was able to recommend you a new hobby that you\'d like to try': 'end'
+                    '[{yes, yeah, interested, suggested}]': {
+                        'Perfect! I\'m glad that I was able to recommend you a new hobby that you\'d like to try': 'end'
 
                     }
                 },
-                '[{no, nope, nah, no thanks, not really, not now, not today}]':{
+                '[{no, nope, nah, no thanks, not really, not now, not today}]': {
                     '`Ok, maybe next time!`': 'end'
                 },
                 'error': {
@@ -173,23 +173,23 @@ professors = {
                 '`Ok! Let me know if they ever give you any trouble. I know how tough they can be. Is there something else I can help with?`': 'end'
             },
             '`Wow I\'m sorry to hear that! Here\'s my advice:` $PROBLEM_STATEMENT `. Is that helpful?`': {
-                '[{yes, yeah, thank, yep}]':{
+                '[{yes, yeah, thank, yep}]': {
                     '`Happy to help! Let me know if you need to talk more about it. I am always here to listen. Is there anything else you want to discuss?`': {
-                        '[{yes, yeah, sure, yup, yep}]':{
-                            '`Ok! What do you want to talk about?`':'end'
+                        '[{yes, yeah, sure, yup, yep}]': {
+                            '`Ok! What do you want to talk about?`': 'end'
                         },
-                        'error':{
+                        'error': {
                             '`Alright! I\'ll be here if you need to talk again! Have a good day !`': 'end'
                         }
                     }
                 },
-                'error':{
-                    '`Ok, I\'m sorry I wasn\'t more helpful. I can offer more advice. Would that be helpful?`':{
-                        '[{yes, yeah, course, sure, yep}]':{
-                            '`Great! Maybe give me some more details this time, I\'ll see if I can do better!`' : 'professor advice'
+                'error': {
+                    '`Ok, I\'m sorry I wasn\'t more helpful. I can offer more advice. Would that be helpful?`': {
+                        '[{yes, yeah, course, sure, yep}]': {
+                            '`Great! Maybe give me some more details this time, I\'ll see if I can do better!`': 'professor advice'
                         },
-                        'error':{
-                            '`If something is really bothering you, try talking to a friend or administrator! I\'m sorry I couldn\'t help this time. Let me know if you need anything else!`':'end'
+                        'error': {
+                            '`If something is really bothering you, try talking to a friend or administrator! I\'m sorry I couldn\'t help this time. Let me know if you need anything else!`': 'end'
                         }
                     }
                 }
@@ -226,6 +226,40 @@ partners = {
             },
         }
     }
+}
+
+
+# add more to the bad, empathise, and offer advice
+friends = {
+    'state': 'friends',
+    '`How is your relationship with your friends?`': {
+        '#GET_FRIENDS_STATUS': {  # to access friends status, use $FRIENDS_STATUS
+            'good': {
+                '`That\'s wonderful to hear! What do you makes your friendship string?`': {
+                    '#GET_STRONG_ATTRIBUTE': {
+                        '`It\'s great that $STRONG_ATTRIBUTE plays a significant role in your relationship. Remember to keep nurturing your bond and supporting each other. Have a great day!`': 'end',
+                    }
+                }
+            },
+            'bad': {
+                '`I\'m sorry to hear that your relationship is going through a tough time. Can you tell me more about the challenges you\'re facing?`': {
+                    '#GET_CHALLENGE': {
+                        '`It sounds like $CHALLENGE is causing some issues in your relationship. Here is some advice:` $FRIENDS_ADVICE `I hope it helps, and remember, open communication and understanding are key to resolving conflicts. Take care!`': 'end',
+                    }
+                    # Add Empathizing here
+                }
+            },
+            'complicated': {
+                '`Relationships can be complicated sometimes. Can you tell me more about the aspects of your relationship that are causing confusion or mixed feelings?`': {
+                    '#GET_CONFUSION': {
+                        '`It seems like $CONFUSION is making things a bit unclear in your relationship. Here is a suggestion:` $FRIENDS_ADVICE `Remember, communication and understanding are essential in addressing these complexities. Good luck!`': 'end',
+                    }
+                }
+                # Add Empathizing here
+            },
+        }
+    }
+
 }
 
 
@@ -341,6 +375,20 @@ def set_confusion(vars: Dict[str, Any], user: Dict[str, Any]):
     generate_partner_advice(vars)
 
 
+def set_friend_status(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['FRIEND_STATUS'] = user['FRIEND_STATUS']
+
+
+def set_friend_challenge(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['FRIEND_CHALLENGE'] = user['FRIEND_CHALLENGE']
+    generate_friend_advice(vars)
+
+
+def set_friend_confusion(vars: Dict[str, Any], user: Dict[str, Any]):
+    vars['CONFUSION'] = user['CONFUSION']
+    generate_friend_advice(vars)
+
+
 macros = {
     'SET_CALL_NAME': MacroGPTJSON(
         'How does the speaker want to be called? Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: ',
@@ -388,6 +436,12 @@ macros = {
         {'PARTNER_STATUS': "n/a"},
         set_partner_status,
     ),
+    'GET_FRIEND_STATUS': MacroGPTJSONNLG(
+        'What is the speaker\'s relationship status with their friend? Respond in the one-line JSON format such as {"FRIEND_STATUS": "good"}: ',
+        {'FRIEND_STATUS': "good"},
+        {'FRIEND_STATUS': "n/a"},
+        set_friend_status,
+    ),
     'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
         'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
         {'STRONG_ATTRIBUTE': "communication"},
@@ -405,6 +459,18 @@ macros = {
         {'CONFUSION': "priorities"},
         {'CONFUSION': "n/a"},
         set_confusion,
+    ),
+    'GET_FRIEND_CHALLENGE': MacroGPTJSONNLG(
+        'What is a challenge the speaker is facing in their relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CHALLENGE": "communication"}: ',
+        {'FRIEND_CHALLENGE': "communication"},
+        {'FRIEND_CHALLENGE': "n/a"},
+        set_friend_challenge,
+    ),
+    'GET_FRIEND_CONFUSION': MacroGPTJSONNLG(
+        'What is causing confusion or mixed feelings in the speaker\'s relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CONFUSION": "priorities"}: ',
+        {'FRIEND_CONFUSION': "priorities"},
+        {'FRIEND_CONFUSION': "n/a"},
+        set_friend_confusion,
     ),
 }
 
