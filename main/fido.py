@@ -333,7 +333,7 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 
 macros = {
     'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
-        'Please provide the summary of the problem, details of the problem, any attempts to solve the problem, and the next logically best state in the one-line JSON format such as {"PROBLEM_SUMMARY": "Stress at work", "PROBLEM_DETAILS": "I have too many tasks to handle", "USER_SOLUTIONS": {"Delegation": false, "Time management": true}, "NEXT_STATE": "user_understanding_of_prob"}: ',
+        generate_prompt(vars),
         {'PROBLEM_SUMMARY': 'Stress at work', 'PROBLEM_DETAILS': 'I have too many tasks to handle', 'USER_SOLUTIONS': {'Delegation': False, 'Time management': True}, 'NEXT_STATE': 'user_understanding_of_prob'},
         {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': {}, 'NEXT_STATE': 'other'},
         set_problem_response
@@ -625,3 +625,5 @@ if __name__ == '__main__':
     add_user("John")
     update_user("John", "New York", 1, "hiking")
     df.run()
+
+
