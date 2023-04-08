@@ -28,13 +28,17 @@ def api_key(filepath=PATH_API_KEY) -> str:
 openai.api_key = api_key()
 
 """
-TODO:
+DONE:
 - Get/store hometown and how they feel about it (good/bad), see if they like the place - Eric
 - Add roommate dialog branch -> Eric
 - Add professor-relate didalog handling -> ezra
 - Fix hobbies, add Friends dialog handling -> raphael
 - add partner dialog handling -> Darin
-- PLEASE get this done by Tuesday night. We need to have a working prototype by then.
+"""
+
+"""
+TODO:
+
 """
 
 
@@ -103,22 +107,56 @@ introduction = {
     'state': 'start',
     '`Hi! I\'m Fido. What\'s your name?`': {
         '#SET_CALL_NAME': {
-            '`It\'s nice to meet you` #GET_CALL_NAME `. Do you want to hear a fun fact?`': {
-                '[{yes, yeah, sure, ok, yea, why not}]': {
-                    '#SET_FUN_FACT`Ok here\'s one:` #GET_FUN_FACT `Isn\'t that cool!`': 'hobbies'
-                },
-                '[{no, nope, nah, no thanks, not really, not now, not today}]': {
-                    '`Ok, maybe next time!`': 'end'
-                },
-                'error': {
-                    '`Fuck you and your family.`': 'end'
-                },
-            }
+            '`It\'s nice to meet you` #GET_CALL_NAME `.`': 'pretreatment_base'
         }
     }
 }
 
 # precontemplation, contemplation, and preparation
+
+pretreatment = {
+    'state': 'pretreatment_base',
+    # what's the problem -- why now have you called?
+    '`What\'s the problem you\'re facing right now?`': {
+        'GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+
+    # how do you see or understand the situation?
+    'state': 'get_details_about_prob',
+    '`How do you see or understand the situation?`': {
+        '#GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+
+    # What do you think will help?
+    'state': 'what_will_help',
+    '`What do you think will help?`': {
+        '#GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+
+    # How have you tried to solve the problem so far -- how did it work?
+    'state': 'attempts_to_solve',
+    '`How have you tried to solve the problem so far, and how did it work?`': {
+        '#GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+
+    # When the problem isn’t present (or isn’t bad), what is going on differently?
+    'state': 'when_problem_not_present',
+    '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
+        '#GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+    'state': 'end',
+
+}
 
 
 # df to get/store hobbies
@@ -228,6 +266,109 @@ partners = {
     }
 }
 
+
+def generate_prompt(vars: Dict[str, Any]):
+    available_states = ['user_understanding_of_prob', 'what_will_help', 'attempts_to_solve', 'when_problem_not_present',
+                        'end']
+
+    prompt_parts = []
+    if 'PROBLEM_SUMMARY' not in vars:
+        prompt_parts.append('"PROBLEM_SUMMARY": "Stress at work"')
+    if 'PROBLEM_DETAILS' not in vars:
+        prompt_parts.append('"PROBLEM_DETAILS": "I have too many tasks to handle"')
+    if 'USER_SOLUTIONS' not in vars:
+        prompt_parts.append('"USER_SOLUTIONS": {"Delegation": false, "Time management": true}')
+
+    prompt_parts.append(f'"NEXT_STATE": {available_states}')
+
+    prompt = f'Please provide the missing information and the next logically best state in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
+
+    return prompt
+
+
+def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
+    if user['PROBLEM_SUMMARY'] != 'n/a':
+        vars['PROBLEM_SUMMARY'] = user['PROBLEM_SUMMARY']
+    if user['PROBLEM_DETAILS'] != 'n/a':
+        vars['PROBLEM_DETAILS'] = user['PROBLEM_DETAILS']
+    if user['USER_SOLUTIONS'] != 'n/a':
+        vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
+
+    if 'NEXT_STATE' in user:
+        vars['STATE'] = user['NEXT_STATE']
+
+macros = {
+    'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
+        'Please provide the summary of the problem, details of the problem, any attempts to solve the problem, and the next logically best state in the one-line JSON format such as {"PROBLEM_SUMMARY": "Stress at work", "PROBLEM_DETAILS": "I have too many tasks to handle", "USER_SOLUTIONS": {"Delegation": false, "Time management": true}, "NEXT_STATE": "user_understanding_of_prob"}: ',
+        {'PROBLEM_SUMMARY': 'Stress at work', 'PROBLEM_DETAILS': 'I have too many tasks to handle', 'USER_SOLUTIONS': {'Delegation': False, 'Time management': True}, 'NEXT_STATE': 'user_understanding_of_prob'},
+        {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': {}, 'NEXT_STATE': 'other'},
+        set_problem_response
+    ),
+    'SET_CALL_NAME': MacroGPTJSON(
+        'How does the speaker want to be called? Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: ',
+        {User.call_name.name: ["Mike", "Michael"]},
+        {User.call_name.name: "n/a"},
+        set_call_names
+    ),
+    'SET_FUN_FACT': MacroGPTJSON(
+        'write a fun fact in the one line JSON format: ',
+        {'FUN_FACT': "The Eiffel Tower can grow up to six inches during the summer due to thermal expansion."},
+        None,
+        set_fun_fact
+    ),
+    'GET_HOBBY_STATEMENT': MacroGPTJSONNLG(
+        'What hobby is the speaker talking about? Respond in the one-line JSON format such as {"hobby": ["Basketball", "Soccer"]}: ',
+        {'Hobbies': ["Basketball", "Soccer"]},
+        {'Hobbies': "n/a"},
+        set_user_hobby,
+    ),
+    '#GET_HOMETOWN_NAME': MacroGPTJSONNLG(
+        'What is the speakers hometown? Respond in the one-line JSON format such as {"HOMETOWN": ["Atlanta"]}: ',
+        {'HOMETOWN': ["Detroit"]},
+        {'HOMETOWN': "n/a"},
+        set_user_hometown,
+    ),
+    '#GET_LIKES_HOMETOWN': MacroGPTJSONNLG(
+        'Does the speaker like their hometown? Respond in the one-line JSON format such as {"LIKES_HOMETOWN: ["YES"]}: ',
+        {'LIKES_HOMETOWN': ["NO"]},
+        None,
+        set_user_likeshometown,
+    ),
+    'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
+        'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
+        {'Problems': ["workload", "communication"]},
+        {'Problems': "n/a"},
+        set_professor_problem,
+    ),
+    'GET_CALL_NAME': MacroNLG(get_call_name),
+    'GET_FUN_FACT': MacroNLG(get_fun_fact),
+    'GET_USER_HOBBY': MacroNLG(get_hobby),
+    'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem),
+    'GET_PARTNER_STATUS': MacroGPTJSONNLG(
+        'What is the speaker\'s relationship status with their partner? Respond in the one-line JSON format such as {"PARTNER_STATUS": "good"}: ',
+        {'PARTNER_STATUS': "good"},
+        {'PARTNER_STATUS': "n/a"},
+        set_partner_status,
+    ),
+    'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
+        'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
+        {'STRONG_ATTRIBUTE': "communication"},
+        {'STRONG_ATTRIBUTE': "n/a"},
+        set_strong_attribute,
+    ),
+    'GET_CHALLENGE': MacroGPTJSONNLG(
+        'What is a challenge the speaker is facing in their relationship? Respond in the one-line JSON format such as {"CHALLENGE": "communication"}: ',
+        {'CHALLENGE': "communication"},
+        {'CHALLENGE': "n/a"},
+        set_challenge,
+    ),
+    'GET_CONFUSION': MacroGPTJSONNLG(
+        'What is causing confusion or mixed feelings in the speaker\'s relationship? Respond in the one-line JSON format such as {"CONFUSION": "priorities"}: ',
+        {'CONFUSION': "priorities"},
+        {'CONFUSION': "n/a"},
+        set_confusion,
+    ),
+}
 
 def get_call_name(vars: Dict[str, Any]):
     ls = vars[User.call_name.name]
@@ -341,76 +482,9 @@ def set_confusion(vars: Dict[str, Any], user: Dict[str, Any]):
     generate_partner_advice(vars)
 
 
-macros = {
-    'SET_CALL_NAME': MacroGPTJSON(
-        'How does the speaker want to be called? Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: ',
-        {User.call_name.name: ["Mike", "Michael"]},
-        {User.call_name.name: "n/a"},
-        set_call_names
-    ),
-    'SET_FUN_FACT': MacroGPTJSON(
-        'write a fun fact in the one line JSON format: ',
-        {'FUN_FACT': "The Eiffel Tower can grow up to six inches during the summer due to thermal expansion."},
-        None,
-        set_fun_fact
-    ),
-    'GET_HOBBY_STATEMENT': MacroGPTJSONNLG(
-        'What hobby is the speaker talking about? Respond in the one-line JSON format such as {"hobby": ["Basketball", "Soccer"]}: ',
-        {'Hobbies': ["Basketball", "Soccer"]},
-        {'Hobbies': "n/a"},
-        set_user_hobby,
-    ),
-    '#GET_HOMETOWN_NAME': MacroGPTJSONNLG(
-        'What is the speakers hometown? Respond in the one-line JSON format such as {"HOMETOWN": ["Atlanta"]}: ',
-        {'HOMETOWN': ["Detroit"]},
-        {'HOMETOWN': "n/a"},
-        set_user_hometown,
-    ),
-    '#GET_LIKES_HOMETOWN': MacroGPTJSONNLG(
-        'Does the speaker like their hometown? Respond in the one-line JSON format such as {"LIKES_HOMETOWN: ["YES"]}: ',
-        {'LIKES_HOMETOWN': ["NO"]},
-        None,
-        set_user_likeshometown,
-    ),
-    'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
-        'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
-        {'Problems': ["workload", "communication"]},
-        {'Problems': "n/a"},
-        set_professor_problem,
-    ),
-    'GET_CALL_NAME': MacroNLG(get_call_name),
-    'GET_FUN_FACT': MacroNLG(get_fun_fact),
-    'GET_USER_HOBBY': MacroNLG(get_hobby),
-    'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem),
-    'GET_PARTNER_STATUS': MacroGPTJSONNLG(
-        'What is the speaker\'s relationship status with their partner? Respond in the one-line JSON format such as {"PARTNER_STATUS": "good"}: ',
-        {'PARTNER_STATUS': "good"},
-        {'PARTNER_STATUS': "n/a"},
-        set_partner_status,
-    ),
-    'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
-        'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
-        {'STRONG_ATTRIBUTE': "communication"},
-        {'STRONG_ATTRIBUTE': "n/a"},
-        set_strong_attribute,
-    ),
-    'GET_CHALLENGE': MacroGPTJSONNLG(
-        'What is a challenge the speaker is facing in their relationship? Respond in the one-line JSON format such as {"CHALLENGE": "communication"}: ',
-        {'CHALLENGE': "communication"},
-        {'CHALLENGE': "n/a"},
-        set_challenge,
-    ),
-    'GET_CONFUSION': MacroGPTJSONNLG(
-        'What is causing confusion or mixed feelings in the speaker\'s relationship? Respond in the one-line JSON format such as {"CONFUSION": "priorities"}: ',
-        {'CONFUSION': "priorities"},
-        {'CONFUSION': "n/a"},
-        set_confusion,
-    ),
-}
-
 df = DialogueFlow('start', end_state='end')
 df.load_transitions(introduction)
-df.load_transitions(hobbies)
+df.load_transitions(pretreatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
