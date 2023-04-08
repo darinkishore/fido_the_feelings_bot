@@ -24,7 +24,7 @@ from typing import Dict, Any, List, Callable, Pattern
 import openai
 from emora_stdm import Macro, Ngrams
 
-from main import regexutils
+import regexutils
 
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
 CHATGPT_MODEL = 'gpt-4'
@@ -72,15 +72,29 @@ class MacroNLG(Macro):
         return self.generate(vars)
 
 class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
-    def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
+    def __init__(self, request: Callable, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
         MacroGPTJSON.__init__(self, request, full_ex, empty_ex, set_variables)
         MacroNLG.__init__(self, generate)
 
+
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        success = MacroGPTJSON.run(self, ngrams, vars, args)
-        if success:
-            return MacroNLG.run(self, ngrams, vars, args)
-        return False
+        request = self.request(vars) if callable(self.request) else self.request
+        prompt = f'{request} Respond in the JSON schema such as {examples}: {ngrams.text().strip()}'
+        output = gpt_completion(prompt)
+        if not output: return False
+
+        try:
+            d = json.loads(output)
+        except JSONDecodeError:
+            print(f'Invalid: {output}')
+            return False
+
+        if self.set_variables:
+            self.set_variables(vars, d)
+        else:
+            vars.update(d)
+
+        return True
 
 def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
