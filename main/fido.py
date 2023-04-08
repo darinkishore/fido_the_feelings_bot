@@ -388,6 +388,7 @@ def generate_prompt(vars: Dict[str, Any]):
     return prompt
 
 
+# Set problem response variables and the next state
 def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
     if user['PROBLEM_SUMMARY'] != 'n/a':
         vars['PROBLEM_SUMMARY'] = user['PROBLEM_SUMMARY']
@@ -398,6 +399,7 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 
     if 'NEXT_STATE' in user:
         vars['STATE'] = user['NEXT_STATE']
+    
 
 macros = {
     'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
