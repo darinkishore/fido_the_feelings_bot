@@ -27,7 +27,7 @@ from emora_stdm import Macro, Ngrams
 import regexutils
 
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
-CHATGPT_MODEL = 'gpt-4'
+CHATGPT_MODEL = 'gpt-3.5-turbo'
 
 
 class MacroGPTJSON(Macro):
@@ -62,6 +62,7 @@ class MacroGPTJSON(Macro):
             vars.update(d)
 
         return True
+
 
 
 class MacroNLG(Macro):
@@ -100,8 +101,8 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
         model=CHATGPT_MODEL,
         messages=[
-            {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-                                          'In any function responses you return, you must think from the perspective of a single session therapist'},
+            # {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
+              #                             'In any function responses you return, you must think from the perspective of a single session therapist'},
             {'role': 'user', 'content': input},
         ]
     )

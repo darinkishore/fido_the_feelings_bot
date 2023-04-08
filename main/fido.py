@@ -41,60 +41,6 @@ TODO:
 
 """
 
-
-# User Management
-def create_database():
-    conn = sqlite3.connect("data.db")
-    c = conn.cursor()
-    c.execute(
-        """CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT UNIQUE,
-            hometown TEXT,
-            likesHometown INTEGER,
-            hobbies TEXT
-        )"""
-    )
-    conn.commit()
-    conn.close()
-
-
-def add_user(name, hometown=None, likes_hometown=None, hobbies=None):
-    conn = sqlite3.connect("data.db")
-    c = conn.cursor()
-
-    # Insert or update user
-    c.execute(
-        """INSERT OR IGNORE INTO users (name, hometown, likesHometown, Hobbies) VALUES (?, ?, ?, ?)""",
-        (name, hometown, likes_hometown, hobbies),
-    )
-    conn.commit()
-
-    # Get the user id for the inserted or existing user
-    c.execute("""SELECT id FROM users WHERE name = ?""", (name,))
-    user_id = c.fetchone()[0]
-
-    conn.close()
-    return user_id
-
-
-def update_user(name, hometown=None, likes_hometown=None, hobbies=None):
-    conn = sqlite3.connect("data.db")
-    c = conn.cursor()
-
-    if hometown is not None:
-        c.execute("""UPDATE users SET hometown = ? WHERE name = ?""", (hometown, name))
-
-    if likes_hometown is not None:
-        c.execute("""UPDATE users SET likesHometown = ? WHERE name = ?""", (likes_hometown, name))
-
-    if hobbies is not None:
-        c.execute("""UPDATE users SET Hobbies = ? WHERE name = ?""", (hobbies, name))
-
-    conn.commit()
-    conn.close()
-
-
 class User(Enum):
     call_name = 0
     hometown = 1
@@ -107,7 +53,7 @@ introduction = {
     'state': 'start',
     '`Hi! I\'m Fido. What\'s your name?`': {
         '#SET_CALL_NAME': {
-            '`It\'s nice to meet you` #GET_CALL_NAME `.`': 'pretreatment_base'
+            '`It\'s nice to meet you,`#GET_CALL_NAME`! What\'s the problem you\'re facing right now?`': 'pretreatment_base'
         }
     }
 }
@@ -117,10 +63,8 @@ introduction = {
 pretreatment = {
     'state': 'pretreatment_base',
     # what's the problem -- why now have you called?
-    '`What\'s the problem you\'re facing right now?`': {
-        'GET_PROBLEM_RESPONSE': {
+    '`#GET_PROBLEM_RESPONSE`': {
 
-        }
     },
 
     # how do you see or understand the situation?
@@ -316,13 +260,12 @@ def why_like_hobby(vars: Dict[str, Any]):
     return vars['WHY_LIKE_HOBBY']
 
 
-def get_similar_hobby(vars: DICT[str, Any]):
+def get_similar_hobby(vars: Dict[str, Any]):
     return vars['SIMILAR_HOBBY']
 
 
 def set_call_names(vars: Dict[str, Any], user: Dict[str, Any]):
     vars[User.call_name.name] = user[User.call_name.name]
-    add_user(vars[User.call_name.name])
 
 
 def set_fun_fact(vars: Dict[str, Any], user: Dict[str, Any]):
@@ -553,9 +496,6 @@ df.load_transitions(pretreatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    create_database()
-    add_user("John")
-    update_user("John", "New York", 1, "hiking")
     df.run()
 
 
