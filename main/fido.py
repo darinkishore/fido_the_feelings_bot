@@ -47,6 +47,7 @@ class User(Enum):
     likes_hometown = 2
     hometown_good = 3
     hobbies = 4
+    friends = 5
 
 
 introduction = {
