@@ -180,86 +180,120 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 
 
 macros = {
+    'GET_PROBLEM_RESPONSE':MacroGPTJSONNLG(
+        generate_prompt,
+        {'PROBLEM_SUMMARY': 'Stress at work', 'PROBLEM_DETAILS': 'I have too many tasks to handle',
+         'USER_SOLUTIONS': {'Delegation': False, 'Time management': True}, 'NEXT_STATE': 'user_understanding_of_prob'},
+        {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': {}, 'NEXT_STATE': 'other'},
+        set_problem_response
+    ),
     'SET_CALL_NAME': MacroGPTJSON(
         'What does the speaker want to be called? Give only one name. Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: ',
         {User.call_name.name: ["Mike", "Michael"]},
         {User.call_name.name: "n/a"},
         set_call_names
     ),
-    'SET_FUN_FACT': MacroGPTJSON(
-        'write a fun fact in the one line JSON format: ',
-        {'FUN_FACT': "The Eiffel Tower can grow up to six inches during the summer due to thermal expansion."},
-        None,
-        set_fun_fact
-    ),
-    'GET_HOBBY_STATEMENT': MacroGPTJSONNLG(
-        'What hobby is the speaker talking about? Respond in the one-line JSON format such as {"hobby": ["Basketball", "Soccer"]}: ',
-        {'Hobbies': ["Basketball", "Soccer"]},
-        {'Hobbies': "n/a"},
-        set_user_hobby,
-    ),
-    '#GET_HOMETOWN_NAME': MacroGPTJSONNLG(
-        'What is the speakers hometown? Respond in the one-line JSON format such as {"HOMETOWN": ["Atlanta"]}: ',
-        {'HOMETOWN': ["Detroit"]},
-        {'HOMETOWN': "n/a"},
-        set_user_hometown,
-    ),
-    '#GET_LIKES_HOMETOWN': MacroGPTJSONNLG(
-        'Does the speaker like their hometown? Respond in the one-line JSON format such as {"LIKES_HOMETOWN: ["YES"]}: ',
-        {'LIKES_HOMETOWN': ["NO"]},
-        None,
-        set_user_likeshometown,
-    ),
-    'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
-        'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
-        {'Problems': ["workload", "communication"]},
-        {'Problems': "n/a"},
-        set_professor_problem,
-    ),
     'GET_CALL_NAME': MacroNLG(get_call_name),
-    'GET_FUN_FACT': MacroNLG(get_fun_fact),
-    'GET_USER_HOBBY': MacroNLG(get_hobby),
-    'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem),
-    'GET_PARTNER_STATUS': MacroGPTJSONNLG(
-        'What is the speaker\'s relationship status with their partner? Respond in the one-line JSON format such as {"PARTNER_STATUS": "good"}: ',
-        {'PARTNER_STATUS': "good"},
-        {'PARTNER_STATUS': "n/a"},
-        set_partner_status,
-    ),
-    'GET_FRIEND_STATUS': MacroGPTJSONNLG(
-        'What is the speaker\'s relationship status with their friend? Respond in the one-line JSON format such as {"FRIEND_STATUS": "good"}: ',
-        {'FRIEND_STATUS': "good"},
-        {'FRIEND_STATUS': "n/a"},
-        set_friend_status,
-    ),
-    'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
-        'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
-        {'STRONG_ATTRIBUTE': "communication"},
-        {'STRONG_ATTRIBUTE': "n/a"},
-        set_strong_attribute,
-    ),
-    'GET_CHALLENGE': MacroGPTJSONNLG(
-        'What is a challenge the speaker is facing in their relationship? Respond in the one-line JSON format such as {"CHALLENGE": "communication"}: ',
-        {'CHALLENGE': "communication"},
-        {'CHALLENGE': "n/a"},
-        set_challenge,
-    ),
-    'GET_CONFUSION': MacroGPTJSONNLG(
-        'What is causing confusion or mixed feelings in the speaker\'s relationship? Respond in the one-line JSON format such as {"CONFUSION": "priorities"}: ',
-        {'CONFUSION': "priorities"},
-        {'CONFUSION': "n/a"},
-        set_confusion,
-    ),
-    'GET_FRIEND_CHALLENGE': MacroGPTJSONNLG(
-        'What is a challenge the speaker is facing in their relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CHALLENGE": "communication"}: ',
-        {'FRIEND_CHALLENGE': "communication"},
-        {'FRIEND_CHALLENGE': "n/a"},
-        set_friend_challenge,
-    ),
-    'GET_FRIEND_CONFUSION': MacroGPTJSONNLG(
-        'What is causing confusion or mixed feelings in the speaker\'s relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CONFUSION": "priorities"}: ',
-        {'FRIEND_CONFUSION': "priorities"},
-        {'FRIEND_CONFUSION': "n/a"},
-        set_friend_confusion,
-    ),
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+'SET_FUN_FACT': MacroGPTJSON(
+    'write a fun fact in the one line JSON format: ',
+    {'FUN_FACT': "The Eiffel Tower can grow up to six inches during the summer due to thermal expansion."},
+    None,
+    set_fun_fact
+),
+
+
+'GET_HOBBY_STATEMENT': MacroGPTJSONNLG(
+    'What hobby is the speaker talking about? Respond in the one-line JSON format such as {"hobby": ["Basketball", "Soccer"]}: ',
+    {'Hobbies': ["Basketball", "Soccer"]},
+    {'Hobbies': "n/a"},
+    set_user_hobby,
+),
+'#GET_HOMETOWN_NAME': MacroGPTJSONNLG(
+    'What is the speakers hometown? Respond in the one-line JSON format such as {"HOMETOWN": ["Atlanta"]}: ',
+    {'HOMETOWN': ["Detroit"]},
+    {'HOMETOWN': "n/a"},
+    set_user_hometown,
+),
+'#GET_LIKES_HOMETOWN': MacroGPTJSONNLG(
+    'Does the speaker like their hometown? Respond in the one-line JSON format such as {"LIKES_HOMETOWN: ["YES"]}: ',
+    {'LIKES_HOMETOWN': ["NO"]},
+    None,
+    set_user_likeshometown,
+),
+'GET_PROFESSOR_PROBLEM_ADVICE': MacroGPTJSONNLG(
+    'What is the speakers problem? Respond in the one-line JSON format such as {"problem": ["workload", "communication"]}: ',
+    {'Problems': ["workload", "communication"]},
+    {'Problems': "n/a"},
+    set_professor_problem,
+),
+
+'GET_FUN_FACT': MacroNLG(get_fun_fact),
+'GET_USER_HOBBY': MacroNLG(get_hobby),
+'GET_PROFESSOR_PROBLEM': MacroNLG(get_professor_problem),
+'GET_PARTNER_STATUS': MacroGPTJSONNLG(
+    'What is the speaker\'s relationship status with their partner? Respond in the one-line JSON format such as {"PARTNER_STATUS": "good"}: ',
+    {'PARTNER_STATUS': "good"},
+    {'PARTNER_STATUS': "n/a"},
+    set_partner_status,
+),
+'GET_FRIEND_STATUS': MacroGPTJSONNLG(
+    'What is the speaker\'s relationship status with their friend? Respond in the one-line JSON format such as {"FRIEND_STATUS": "good"}: ',
+    {'FRIEND_STATUS': "good"},
+    {'FRIEND_STATUS': "n/a"},
+    set_friend_status,
+),
+'GET_STRONG_ATTRIBUTE': MacroGPTJSONNLG(
+    'What is a strong attribute the speaker mentioned about their relationship? Respond in the one-line JSON format such as {"STRONG_ATTRIBUTE": "communication"}: ',
+    {'STRONG_ATTRIBUTE': "communication"},
+    {'STRONG_ATTRIBUTE': "n/a"},
+    set_strong_attribute,
+),
+'GET_CHALLENGE': MacroGPTJSONNLG(
+    'What is a challenge the speaker is facing in their relationship? Respond in the one-line JSON format such as {"CHALLENGE": "communication"}: ',
+    {'CHALLENGE': "communication"},
+    {'CHALLENGE': "n/a"},
+    set_challenge,
+),
+'GET_CONFUSION': MacroGPTJSONNLG(
+    'What is causing confusion or mixed feelings in the speaker\'s relationship? Respond in the one-line JSON format such as {"CONFUSION": "priorities"}: ',
+    {'CONFUSION': "priorities"},
+    {'CONFUSION': "n/a"},
+    set_confusion,
+),
+'GET_FRIEND_CHALLENGE': MacroGPTJSONNLG(
+    'What is a challenge the speaker is facing in their relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CHALLENGE": "communication"}: ',
+    {'FRIEND_CHALLENGE': "communication"},
+    {'FRIEND_CHALLENGE': "n/a"},
+    set_friend_challenge,
+),
+'GET_FRIEND_CONFUSION': MacroGPTJSONNLG(
+    'What is causing confusion or mixed feelings in the speaker\'s relationship with their friend? Respond in the one-line JSON format such as {"FRIEND_CONFUSION": "priorities"}: ',
+    {'FRIEND_CONFUSION': "priorities"},
+    {'FRIEND_CONFUSION': "n/a"},
+    set_friend_confusion,
+)
+"""
