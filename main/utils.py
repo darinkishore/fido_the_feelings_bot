@@ -24,10 +24,15 @@ from typing import Dict, Any, List, Callable, Pattern
 import openai
 from emora_stdm import Macro, Ngrams
 
-from main import regexutils
+import regexutils
 
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
 CHATGPT_MODEL = 'gpt-3.5-turbo'
+
+class MacroMakeFillerText(Macro):
+        def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+            filler_text = {'Got it. That makes sense.', ''}
+
 
 
 class MacroGPTJSON(Macro):
@@ -64,6 +69,7 @@ class MacroGPTJSON(Macro):
         return True
 
 
+
 class MacroNLG(Macro):
     def __init__(self, generate: Callable[[Dict[str, Any]], str]):
         self.generate = generate
@@ -72,20 +78,38 @@ class MacroNLG(Macro):
         return self.generate(vars)
 
 class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
-    def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
+    def __init__(self, request: Callable, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
         MacroGPTJSON.__init__(self, request, full_ex, empty_ex, set_variables)
         MacroNLG.__init__(self, generate)
 
+
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        success = MacroGPTJSON.run(self, ngrams, vars, args)
-        if success:
-            return MacroNLG.run(self, ngrams, vars, args)
-        return False
+        request = self.request(vars) if callable(self.request) else self.request
+        prompt = f'{request} Respond in the JSON schema such as {examples}: {ngrams.text().strip()}'
+        output = gpt_completion(prompt)
+        if not output: return False
+
+        try:
+            d = json.loads(output)
+        except JSONDecodeError:
+            print(f'Invalid: {output}')
+            return False
+
+        if self.set_variables:
+            self.set_variables(vars, d)
+        else:
+            vars.update(d)
+
+        return True
 
 def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
         model=CHATGPT_MODEL,
-        messages=[{'role': 'user', 'content': input}]
+        messages=[
+            # {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
+              #                             'In any function responses you return, you must think from the perspective of a single session therapist'},
+            {'role': 'user', 'content': input},
+        ]
     )
     output = response['choices'][0]['message']['content'].strip()
 
