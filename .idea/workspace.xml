@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a9e7a283-1fc7-4312-af4d-8f822102914b" name="Changes" comment="Completed most of the friends df. Just need to figure out how to add empathizing to the df">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/fido.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/fido.py" afterDir="false" />
     </list>
     <list id="62df4774-158d-41ec-b86e-3668f39350f9" name="Changes by ej717" comment="Changes by ej717" />
     <list id="b7fc57c9-fa24-4fd7-b1ad-2eb9b6ad5941" name="Changes by rapha" comment="Changes by rapha" />
@@ -110,7 +111,7 @@
       <workItem from="1680790146067" duration="1082000" />
       <workItem from="1680830928099" duration="579000" />
       <workItem from="1680833436805" duration="2357000" />
-      <workItem from="1681043178132" duration="1235000" />
+      <workItem from="1681043178132" duration="4850000" />
     </task>
     <task id="LOCAL-00001" summary="Metric fuckton of changes.">
       <created>1680473726123</created>
