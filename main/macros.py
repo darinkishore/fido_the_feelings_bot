@@ -177,8 +177,6 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['STATE'] = user['NEXT_STATE']
 
 
-
-
 macros = {
     'GET_PROBLEM_RESPONSE':MacroGPTJSONNLG(
         generate_prompt,
