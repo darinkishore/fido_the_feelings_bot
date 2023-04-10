@@ -29,14 +29,31 @@ import regexutils
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
 CHATGPT_MODEL = 'gpt-3.5-turbo'
 
-class MacroMakeFillerText(Macro):
-        def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-            filler_text = {'Got it. That makes sense.', ''}
 
+class MacroMakeFillerText(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        filler_text = {'Got it. That makes sense.',
+                       "I understand where you're coming from.",
+                       "That's a valid perspective.",
+                       "I can see why you would think that.",
+                       "That's a good point.",
+                       "I'm here to support you.",
+                       "I'm listening",
+                       "I hear you.",
+                       "That's a complex issue",
+                       "I appreciate you sharing that with me.",
+                       "I appreciate your honesty.",
+                       "Thank you for trusting me with that.",
+                       "It's understandable to feel that way.",
+                       "That's a common issue",
+                       "It's important to be patient with yourself.",
+                       "'Thanks for trusting me with your story."}
+        return random.choice(filler_text)
 
 
 class MacroGPTJSON(Macro):
-    def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None):
+    def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None,
+                 set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None):
         """
         :param request: the task to be requested regarding the user input (e.g., How does the speaker want to be called?).
         :param full_ex: the example output where all values are filled (e.g., {"call_names": ["Mike", "Michael"]}).
@@ -69,7 +86,6 @@ class MacroGPTJSON(Macro):
         return True
 
 
-
 class MacroNLG(Macro):
     def __init__(self, generate: Callable[[Dict[str, Any]], str]):
         self.generate = generate
@@ -77,11 +93,13 @@ class MacroNLG(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         return self.generate(vars)
 
+
 class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
-    def __init__(self, request: Callable, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None, generate: Callable[[Dict[str, Any]], str] = None):
+    def __init__(self, request: Callable, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None,
+                 set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None,
+                 generate: Callable[[Dict[str, Any]], str] = None):
         MacroGPTJSON.__init__(self, request, full_ex, empty_ex, set_variables)
         MacroNLG.__init__(self, generate)
-
 
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         request = self.request(vars) if callable(self.request) else self.request
@@ -102,12 +120,13 @@ class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
 
         return True
 
+
 def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
         model=CHATGPT_MODEL,
         messages=[
             # {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-              #                             'In any function responses you return, you must think from the perspective of a single session therapist'},
+            #                             'In any function responses you return, you must think from the perspective of a single session therapist'},
             {'role': 'user', 'content': input},
         ]
     )

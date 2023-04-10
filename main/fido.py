@@ -28,9 +28,6 @@ def api_key(filepath=PATH_API_KEY) -> str:
 
 openai.api_key = api_key()
 
-
-
-
 introduction = {
     'state': 'start',
     '`Hi! I\'m Fido. What\'s your name?`': {
@@ -116,35 +113,59 @@ early_in_treatment = {
     'state': 'early_in_treatment_base', # See what the main issue is in terms of how the user has tried to tackle the problem
     '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
+            # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
+            # maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
+
         }
     },
 
     'state': 'early_in_treatment_influence', # See how the problem influences the user and how the user influences the problem
     '`When and how does the problem influence you; and when do you influence it?`': {
         '#GET_PROBLEM_RESPONSE': {
+
         }
     },
 
     'state': 'early_in_treatment_idea', # See what the user's idea or theory about what will help is in terms of tackling these issues
     '`What\'s your ideas or theories about what wil help?`': {
         '#GET_PROBLEM_RESPONSE': {
+
         }
     },
 
     'state': 'early_in_treatment_small_steps', # See what small steps the user can take to address the issue so they can gain some confidence
     '`What are some small steps you can take to address this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
+
+        }
+    },
+    'state': 'pretreatment_summary',
+    '`It sounds like $SUMMARY. With the information provided, do you feel confident in how to address your issue?`': {
+        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+            '`Great! Let\'s move on to the next step.`': 'post_treatment_bas
+        },
+        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
+        },
+        'error': {
+            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
         }
     }
 }
 
-macros['GET_PROBLEM_RESPONSE'] = MacroGPTJSONNLG(
-        generate_prompt,
-        {'PROBLEM_SUMMARY': 'Stress at work', 'PROBLEM_DETAILS': 'I have too many tasks to handle',
-         'USER_SOLUTIONS': {'Delegation': False, 'Time management': True}, 'NEXT_STATE': 'user_understanding_of_prob'},
-        {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': {}, 'NEXT_STATE': 'other'},
-        set_problem_response
-    )
+# evaluation
+post_treatment = {
+    'state': 'post_treatment_base',
+
+}
+
+# we gotta solo implement preparation/action stages, which is where the actual "therapizing" happens
+
+
 
 
 df = DialogueFlow('start', end_state='end')
