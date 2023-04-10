@@ -21,6 +21,7 @@ import re
 import random
 from json import JSONDecodeError
 from typing import Dict, Any, List, Callable, Pattern
+import random
 
 import openai
 from emora_stdm import Macro, Ngrams
@@ -33,22 +34,20 @@ CHATGPT_MODEL = 'gpt-3.5-turbo'
 
 class MacroMakeFillerText(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        filler_text = {'Got it. That makes sense.',
+        filler_text = ['Got it. That makes sense.',
                        "I understand where you're coming from.",
                        "That's a valid perspective.",
-                       "I can see why you would think that.",
-                       "That's a good point.",
                        "I'm here to support you.",
                        "I'm listening",
                        "I hear you.",
-                       "That's a complex issue",
+                       "That's a complex issue.",
                        "I appreciate you sharing that with me.",
                        "I appreciate your honesty.",
                        "Thank you for trusting me with that.",
                        "It's understandable to feel that way.",
-                       "That's a common issue",
+                       "That's a common issue.",
                        "It's important to be patient with yourself.",
-                       "'Thanks for trusting me with your story."}
+                       "'Thanks for trusting me with your story."]
         return random.choice(filler_text)
 
 class MacroMakeToughResponse(Macro):
@@ -115,6 +114,7 @@ class MacroGPTJSONNLG(MacroGPTJSON, MacroNLG):
 
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         request = self.request(vars) if callable(self.request) else self.request
+        examples = f'{self.full_ex} or {self.empty_ex} if unavailable' if self.empty_ex else self.full_ex
         prompt = f'{request} Respond in the JSON schema such as {examples}: {ngrams.text().strip()}'
         output = gpt_completion(prompt)
         if not output: return False
@@ -137,8 +137,8 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
         model=CHATGPT_MODEL,
         messages=[
-            # {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-            #                             'In any function responses you return, you must think from the perspective of a single session therapist'},
+            {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
+                                         'In any function responses you return, you must think from the perspective of a single session therapist'},
             {'role': 'user', 'content': input},
         ]
     )

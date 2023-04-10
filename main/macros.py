@@ -10,7 +10,7 @@ from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
 from enum import Enum
 
-from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion
+from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, MacroMakeFillerText
 
 class User(Enum):
     call_name = 'call_name'
@@ -159,7 +159,7 @@ def generate_prompt(vars: Dict[str, Any]):
 
     prompt_parts.append(f'"NEXT_STATE": {available_states}')
 
-    prompt = f'Please provide the missing information and the next logically best state in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
+    prompt = f'Please provide the missing information and choose the next logically best state from the given options in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
 
@@ -174,7 +174,7 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
-        vars['STATE'] = user['NEXT_STATE']
+        vars['__state__'] = user['NEXT_STATE']
 
 
 macros = {
@@ -192,7 +192,7 @@ macros = {
         set_call_names
     ),
     'GET_CALL_NAME': MacroNLG(get_call_name),
-
+    'FILLER_RESPONSE': MacroMakeFillerText(),
 }
 
 

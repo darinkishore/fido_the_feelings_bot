@@ -32,7 +32,13 @@ introduction = {
     'state': 'start',
     '`Hi! I\'m Fido. What\'s your name?`': {
         '#SET_CALL_NAME': {
-            '`It\'s nice to meet you,`#GET_CALL_NAME`! What\'s the main problem you\'re facing right now?`': 'pretreatment_base'
+            '`It\'s nice to meet you,`#GET_CALL_NAME`! What\'s the main problem you\'re facing right now?`': {
+                '#GET_PROBLEM_RESPONSE': {
+                    '#FILLER_RESPONSE': {
+
+                    }
+                }
+            }
         }
     }
 }
@@ -40,19 +46,14 @@ introduction = {
 # precontemplation, contemplation, and preparation
 
 pretreatment = {
-    'state': 'pretreatment_base',
-    # what's the problem -- why now have you called?
-    '`#GET_PROBLEM_RESPONSE`': {
-        '#GET_FILLER_ACKNOWLEDGEMENT`': {
-            # random filler text response
-        }
-    },
 
     # how do you see or understand the situation?
     'state': 'get_details_about_prob',
     '`How do you see or understand the situation?`': {
         '#GET_PROBLEM_RESPONSE': {
-            # random filler text response
+            '#FILLER_RESPONSE': {
+
+            }
         }
     },
 
@@ -60,7 +61,9 @@ pretreatment = {
     'state': 'what_will_help',
     '`What do you think will help?`': {
         '#GET_PROBLEM_RESPONSE': {
-            # random filler text response
+            '#FILLER_RESPONSE': {
+
+            }
         }
     },
 
@@ -68,7 +71,9 @@ pretreatment = {
     'state': 'attempts_to_solve',
     '`How have you tried to solve the problem so far, and how did it work?`': {
         '#GET_PROBLEM_RESPONSE': {
-            # random filler text response
+            '#FILLER_RESPONSE': {
+
+            }
         }
     },
 
@@ -76,13 +81,15 @@ pretreatment = {
     'state': 'when_problem_not_present',
     '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
         '#GET_PROBLEM_RESPONSE': {
-                # random filler text response
+            '#FILLER_RESPONSE ': {
+
+            }
         }
     },
 
     'state': 'pretreatment_summary',
     '`It sounds like $SUMMARY. Is that right?`': {
-        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]' : {
+        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
             '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
         },
         '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
@@ -110,7 +117,8 @@ pretreatment = {
 # what are some small steps you can take to address this issue?
 
 early_in_treatment = {
-    'state': 'early_in_treatment_base', # See what the main issue is in terms of how the user has tried to tackle the problem
+    'state': 'early_in_treatment_base',
+    # See what the main issue is in terms of how the user has tried to tackle the problem
     '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
             # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
@@ -119,21 +127,24 @@ early_in_treatment = {
         }
     },
 
-    'state': 'early_in_treatment_influence', # See how the problem influences the user and how the user influences the problem
+    'state': 'early_in_treatment_influence',
+    # See how the problem influences the user and how the user influences the problem
     '`When and how does the problem influence you; and when do you influence it?`': {
         '#GET_PROBLEM_RESPONSE': {
 
         }
     },
 
-    'state': 'early_in_treatment_idea', # See what the user's idea or theory about what will help is in terms of tackling these issues
+    'state': 'early_in_treatment_idea',
+    # See what the user's idea or theory about what will help is in terms of tackling these issues
     '`What\'s your ideas or theories about what wil help?`': {
         '#GET_PROBLEM_RESPONSE': {
 
         }
     },
 
-    'state': 'early_in_treatment_small_steps', # See what small steps the user can take to address the issue so they can gain some confidence
+    'state': 'early_in_treatment_small_steps',
+    # See what small steps the user can take to address the issue so they can gain some confidence
     '`What are some small steps you can take to address this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
 
@@ -142,7 +153,7 @@ early_in_treatment = {
     'state': 'pretreatment_summary',
     '`It sounds like $SUMMARY. With the information provided, do you feel confident in how to address your issue?`': {
         '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-            '`Great! Let\'s move on to the next step.`': 'post_treatment_bas
+            '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
         },
         '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
             '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
@@ -164,8 +175,6 @@ post_treatment = {
 }
 
 # we gotta solo implement preparation/action stages, which is where the actual "therapizing" happens
-
-
 
 
 df = DialogueFlow('start', end_state='end')
