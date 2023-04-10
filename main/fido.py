@@ -111,48 +111,28 @@ pretreatment = {
 # what are some small steps you can take to address this issue?
 
 early_in_treatment = {
-    'state': 'start',
-    # what's the problem -- why now have you called?
-    '`We are now in the early treatment stage of the problem, meaning we will be discussion what action you can take to help tackle your problem! \n please state how you would categorize your problem between hobbies, professor,or general relationship issues (including friends and romantic) `': {
-        '[{hobbies, hobby, fun, enjoy}]': {
-            'state': 'early_in_treatment_hobbies',
-            '`What are some of the hobbies that you enjoy?`': {
-                '#GET_HOBBY_STATEMENT': {  # to access hobby statement, use $HOBBY_STATEMENT
-                    "`That\'s good! What seems to be the problem with your hobbies?`": {
-                        '#GET_PROBLEM_RESPONSE': {
-                        },
-                        '[{bad coaches, coach, boring, burnout, not, not fun, not good, not great, not help}]': {
-                            'state': 'early_in_treatment_influence',
-                            '`When and how does the problem influence you; and when do you influence it?`': {  # first question to ask
-                                '#GET_PROBLEM_RESPONSE': {
-                                },
-                            },
-                        },
-                        '[{idea, theory, help, want, want to, want to do, want to try, want to improve, want to get better}]': {
-                            'state': 'early_in_treatment_idea',
-                            '`What\'s your idea or theory about what wil help?`': {  # second question to ask
-                                '#GET_PROBLEM_RESPONSE': {
-                                },
-                            },
-                        },
-                        '[{roadblocks, challenges, anticipate, address, issue, issues}]': {
-                            'state': 'early_in_treatment_roadblocks',
-                            '`What are some potential roadblocks or challenges that you anticipate in addressing this issue?`': {  # third question to ask
-                                '#GET_PROBLEM_RESPONSE': {
-                                },
-                            },
-                        },
-                        '[{small, steps, take, address, issue, issues}]': {
-                            'state': 'early_in_treatment_small_steps',
-                            '`What are some small steps you can take to address this issue?`': {  # fourth question to ask
-                                '#GET_PROBLEM_RESPONSE': {
-                                },
-                            },
-                        },
-                    }
-                }
-            }
-        },
+    'state': 'early_in_treatment_base', # See what the main issue is in terms of how the user has tried to tackle the problem
+    '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
+        '#GET_PROBLEM_RESPONSE': {
+        }
+    },
+
+    'state': 'early_in_treatment_influence', # See how the problem influences the user and how the user influences the problem
+    '`When and how does the problem influence you; and when do you influence it?`': {
+        '#GET_PROBLEM_RESPONSE': {
+        }
+    },
+
+    'state': 'early_in_treatment_idea', # See what the user's idea or theory about what will help is in terms of tackling these issues
+    '`What\'s your ideas or theories about what wil help?`': {
+        '#GET_PROBLEM_RESPONSE': {
+        }
+    },
+
+    'state': 'early_in_treatment_small_steps', # See what small steps the user can take to address the issue so they can gain some confidence
+    '`What are some small steps you can take to address this issue?`': {
+        '#GET_PROBLEM_RESPONSE': {
+        }
     }
 }
 
