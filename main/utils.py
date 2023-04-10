@@ -29,6 +29,11 @@ import regexutils
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
 CHATGPT_MODEL = 'gpt-3.5-turbo'
 
+class MacroMakeFillerText(Macro):
+        def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+            filler_text = {'Got it. That makes sense.', ''}
+
+
 
 class MacroGPTJSON(Macro):
     def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None, set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None):
