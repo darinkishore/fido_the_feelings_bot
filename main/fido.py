@@ -129,6 +129,7 @@ early_in_treatment = {
     'state': 'early_in_treatment_idea', # See what the user's idea or theory about what will help is in terms of tackling these issues
     '`What\'s your ideas or theories about what wil help?`': {
         '#GET_PROBLEM_RESPONSE': {
+
         }
     },
 
@@ -137,7 +138,29 @@ early_in_treatment = {
         '#GET_PROBLEM_RESPONSE': {
 
         }
+    },
+    'state': 'pretreatment_summary',
+    '`It sounds like $SUMMARY. With the information provided, do you feel confident in how to address your issue?`': {
+        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+            '`Great! Let\'s move on to the next step.`': 'post_treatment_bas
+        },
+        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
+        },
+        'error': {
+            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
+        }
     }
+}
+
+# evaluation
+post_treatment = {
+    'state': 'post_treatment_base',
+
 }
 
 # we gotta solo implement preparation/action stages, which is where the actual "therapizing" happens
