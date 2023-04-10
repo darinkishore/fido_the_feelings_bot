@@ -32,6 +32,12 @@ CHATGPT_MODEL = 'gpt-3.5-turbo'
 class MacroMakeFillerText(Macro):
         def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
             filler_text = {'Got it. That makes sense.', ''}
+            return filler_text
+class MacroToughResponse(Macro):
+        def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+            tough_response = {'I\'m sorry to hear that. I\'m not sure what to say.', ''}
+            return tough_response
+
 
 
 
