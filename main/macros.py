@@ -10,6 +10,8 @@ from emora_stdm import Macro, Ngrams
 from typing import Dict, Any, List
 from enum import Enum
 
+from emora_stdm.state_transition_dialogue_manager import dialogue_flow
+
 from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, MacroMakeFillerText
 
 class User(Enum):
@@ -174,7 +176,7 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
-        vars['__state__'] = user['NEXT_STATE']
+        vars['__target__'] = user['NEXT_STATE']
 
 
 macros = {
