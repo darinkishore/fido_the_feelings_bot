@@ -101,12 +101,30 @@ def generate_prompt_pre(vars: Dict[str, Any]):
 
 # Set problem response variables and the next state
 def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
-    if user['PROBLEM_SUMMARY'] != 'n/a':
-        vars['PROBLEM_SUMMARY'] = f"{vars['PROBLEM_SUMMARY']}, {user['PROBLEM_SUMMARY']}" if vars['PROBLEM SUMMARY'] and vars['PROBLEM_SUMMARY'] != user['PROBLEM_SUMMARY'] else vars['PROBLEM_SUMMARY']
-    if user['PROBLEM_DETAILS'] != 'n/a':
-        vars['PROBLEM_DETAILS'] = f"{vars['PROBLEM_DETAILS']}, {user['PROBLEM_DETAILS']}" if vars['PROBLEM_DETAILS'] and vars['PROBLEM_DETAILS'] != user['PROBLEM_DETAILS'] else vars['PROBLEM_DETAILS']
-    if user['USER_SOLUTIONS'] != 'n/a':
-        vars['USER_SOLUTIONS'] = f"{vars['USER_SOLUTIONS']}, {user['USER_SOLUTIONS']}" if vars['USER_SOLUTIONS'] and vars['USER_SOLUTIONS]'] != user['USER_SOLUTIONS'] else vars['USER_SOLUTIONS']
+
+    user_problem_summary = user.get('PROBLEM_SUMMARY', 'n/a')
+    if user_problem_summary != 'n/a':
+        vars_problem_summary = vars.get('PROBLEM_SUMMARY', '')
+        if vars_problem_summary and vars_problem_summary != user_problem_summary:
+            vars['PROBLEM_SUMMARY'] = f"{vars_problem_summary}, {user_problem_summary}"
+        else:
+            vars['PROBLEM_SUMMARY'] = user_problem_summary
+
+    user_problem_details = user.get('PROBLEM_DETAILS', 'n/a')
+    if user_problem_details != 'n/a':
+        vars_problem_details = vars.get('PROBLEM_DETAILS', '')
+        if vars_problem_details and vars_problem_details != user_problem_details:
+            vars['PROBLEM_DETAILS'] = f"{vars_problem_details}, {user_problem_details}"
+        else:
+            vars['PROBLEM_DETAILS'] = user_problem_details
+
+    user_solutions = user.get('USER_SOLUTIONS', 'n/a')
+    if user_solutions != 'n/a':
+        vars_user_solutions = vars.get('USER_SOLUTIONS', '')
+        if vars_user_solutions and vars_user_solutions != user_solutions:
+            vars['USER_SOLUTIONS'] = f"{vars_user_solutions}, {user_solutions}"
+        else:
+            vars['USER_SOLUTIONS'] = user_solutions
 
     if 'NEXT_STATE' in user:
         if user['NEXT_STATE'] in available_states_pre:
