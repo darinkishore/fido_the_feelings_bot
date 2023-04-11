@@ -175,7 +175,8 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
-        available_states.remove(user['NEXT_STATE'])
+        if user['NEXT_STATE'] in available_states:
+            available_states.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
 
 
