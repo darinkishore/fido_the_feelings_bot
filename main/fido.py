@@ -35,7 +35,6 @@ introduction = {
             '`It\'s nice to meet you,`#GET_CALL_NAME`! What\'s the main problem you\'re facing right now?`': {
                 '#GET_PROBLEM_RESPONSE': {
                     '#FILLER_RESPONSE': {
-
                     }
                 }
             }
@@ -46,12 +45,11 @@ introduction = {
 # precontemplation, contemplation, and preparation
 
 pretreatment = {
-
     # how do you see or understand the situation?
-    'state': 'get_details_about_prob',
+    'state': 'user_understanding_of_prob',
     '`How do you see or understand the situation?`': {
         '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE': {
+            '#FILLER_RESPONSE`details_abt_prob`': {
 
             }
         }
@@ -61,7 +59,7 @@ pretreatment = {
     'state': 'what_will_help',
     '`What do you think will help?`': {
         '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE': {
+            '#FILLER_RESPONSE`what_will_help`': {
 
             }
         }
@@ -71,7 +69,7 @@ pretreatment = {
     'state': 'attempts_to_solve',
     '`How have you tried to solve the problem so far, and how did it work?`': {
         '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE': {
+            '#FILLER_RESPONSE`attempts_to_solve`': {
 
             }
         }
@@ -81,7 +79,7 @@ pretreatment = {
     'state': 'when_problem_not_present',
     '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
         '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE ': {
+            '#FILLER_RESPONSE`when_prob_not_present`': {
 
             }
         }
