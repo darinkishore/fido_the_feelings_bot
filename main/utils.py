@@ -50,29 +50,34 @@ class MacroMakeFillerText(Macro):
                        "'Thanks for trusting me with your story."]
         return random.choice(filler_text)
 
+
 class MacroMakeToughResponse(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         tough_response = ['I\'m sorry to hear that. I\'m here to support you.',
-                            "I'm sorry you're going through that.",
-                            "I'm sorry you're feeling that way.",
-                            "I'm sorry you're having a hard time.",
-                            "I'm sorry you're struggling with that.",
-                            "It\'s really sad to know that. I want you to know that I'm by your side.",
-                            "I'm sympathetic to your situation. You can count on me for support.",
-                            "It's disheartening to hear that. I want to assure you that I'm here to help you!"]
+                          "I'm sorry you're going through that.",
+                          "I'm sorry you're feeling that way.",
+                          "I'm sorry you're having a hard time.",
+                          "I'm sorry you're struggling with that.",
+                          "It\'s really sad to know that. I want you to know that I'm by your side.",
+                          "I'm sympathetic to your situation. You can count on me for support.",
+                          "It's disheartening to hear that. I want to assure you that I'm here to help you!"]
         return random.choice(tough_response)
+
 
 class MacroMakeSummary(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        output = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a very very detailed recap of this info? "
-        f"Respond with only the content of the summary. It should be extremely detailed and show that you truly listened to the problem. Respond as if speaking to the user and ask if you have the details right in yes or no format")
+        output = gpt_completion(
+            f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a very very detailed recap of this info? "
+            f"Respond with only the content of the summary. It should be extremely detailed and show that you truly listened to the problem. Respond as if speaking to the user and ask if you have the details right in yes or no format")
         vars['SUMMARY'] = output
         return vars['SUMMARY']
 
+
 class MacroMakeSuggestions(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        output = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, solutions: {vars['USER_SOLUTIONS']}, challenge:'{vars['PROBLEM_CHALLENGE']} influence: {vars['PROBLEM_INFLUENCE']}, and ideas: {vars['PROBLEM_IDEA']} can you provide some suggestions for small immediate improvements? "
-        f"Respond with only the content of the summary. It should be extremely detailed, but brief, and show that you truly listened to the problem. Respond as if speaking to the user and ask if this solution is of interest in yes or no format")
+        output = gpt_completion(
+            f"Given this information about the user's problem - emotional state: {vars['USER_EMOTIONAL_STATE']}, coping mechanisms: {vars['USER_COPING_MECHANISMS']}, support system: {vars['USER_SUPPORT_SYSTEM']}, past experiences: {vars['USER_PAST_EXPERIENCES']}, goals and expectations: {vars['USER_GOALS_AND_EXPECTATIONS']}, stressors: {vars['USER_STRESSORS']}, self-awareness: {vars['USER_SELF_AWARENESS']}, attempts at fixing the problem: {vars['USER_ATTEMPTS_FIXING_PROBLEM']}, anticipated challenges: {vars['USER_FINDS_ANTICIPATED_CHALLENGES']}, problem influence: {vars['PROBLEM_INFLUENCE']}, and ideas: {vars['PROBLEM_IDEA']} - can you provide only one suggestion to create a small immediate improvement? "
+            f"Please justify why you proposed the solution (what pieces of information about the user you used to make sure it would work for them). Respond as if speaking to the user and ask if this solution is of interest in yes or no format")
         vars['SUGGESTION'] = output
         return vars['SUGGESTION']
 
@@ -153,7 +158,7 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
         model=CHATGPT_MODEL,
         messages=[
             {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-                                         'In any function responses you return, you must think from the perspective of a single session therapist. '},
+                                          'In any function responses you return, you must think from the perspective of a single session therapist. '},
             {'role': 'user', 'content': input},
         ],
         temperature=0.4,
