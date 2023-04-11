@@ -62,6 +62,12 @@ class MacroMakeToughResponse(Macro):
                             "It's disheartening to hear that. I want to assure you that I'm here to help you!"]
         return random.choice(tough_response)
 
+class MacroMakeSummary(Macro):
+    def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
+        vars['SUMMARY'] = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a recap of this info? "
+        f"Respond with only the content of the summary.")
+
+
 class MacroGPTJSON(Macro):
     def __init__(self, request: str, full_ex: Dict[str, Any], empty_ex: Dict[str, Any] = None,
                  set_variables: Callable[[Dict[str, Any], Dict[str, Any]], None] = None):
@@ -138,7 +144,7 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
         model=CHATGPT_MODEL,
         messages=[
             {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-                                         'In any function responses you return, you must think from the perspective of a single session therapist'},
+                                         'In any function responses you return, you must think from the perspective of a single session therapist. '},
             {'role': 'user', 'content': input},
         ]
     )
