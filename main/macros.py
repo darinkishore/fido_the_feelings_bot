@@ -64,18 +64,36 @@ early_available_states = ['how_problem_influences_user_vice_versa', 'get_user_id
                            'early_in_treatment_summary']
 
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
-    if user['PROBLEM_CHALLENGE'] != 'n/a':
-        vars['PROBLEM_CHALLENGE'] = f"{vars['PROBLEM_CHALLENGE']}, {user['PROBLEM_CHALLENGE']}" if vars['PROBLEM_CHALLENGE'] != user['PROBLEM_CHALLENGE'] else vars['PROBLEM_CHALLENGE']
-    if user['PROBLEM_INFLUENCE'] != 'n/a':
-        vars['PROBLEM_INFLUENCE'] = f"{vars['PROBLEM_INFLUENCE']}, {user['PROBLEM_INFLUENCE']}" if vars['PROBLEM_INFLUENCE'] != user['PROBLEM_INFLUENCE'] else vars['PROBLEM_INFLUENCE']
-    if user['PROBLEM_IDEA'] != 'n/a':
-        vars['PROBLEM_IDEA'] = f"{vars['PROBLEM_IDEA']}, {user['PROBLEM_IDEA']}" if vars['PROBLEM_IDEA'] != user['PROBLEM_IDEA'] else vars['PROBLEM_IDEA']
+    user_problem_challenge = user.get('PROBLEM_CHALLENGE')
+    if user_problem_challenge != 'n/a':
+        vars_problem_challenge = vars.get('PROBLEM_CHALLENGE')
+        if vars_problem_challenge and vars_problem_challenge != user_problem_challenge:
+            vars['PROBLEM_CHALLENGE'] = f"{vars_problem_challenge}, {user_problem_challenge}"
+        else:
+            vars['PROBLEM_CHALLENGE'] = user_problem_challenge
 
+    user_problem_influence = user.get('PROBLEM_INFLUENCE')
+    if user_problem_influence != 'n/a':
+        vars_problem_influence = vars.get('PROBLEM_INFLUENCE')
+        if vars_problem_influence and vars_problem_influence != user_problem_influence:
+            vars['PROBLEM_INFLUENCE'] = f"{vars_problem_influence}, {user_problem_influence}"
+        else:
+            vars['PROBLEM_INFLUENCE'] = user_problem_influence
+
+    user_problem_idea = user.get('PROBLEM_IDEA')
+    if user_problem_idea != 'n/a':
+        vars_problem_idea = vars.get('PROBLEM_IDEA')
+        if vars_problem_idea and vars_problem_idea != user_problem_idea:
+            vars['PROBLEM_IDEA'] = f"{vars_problem_idea}, {user_problem_idea}"
+        else:
+            vars['PROBLEM_IDEA'] = user_problem_idea
 
     if 'NEXT_STATE' in user:
         if user['NEXT_STATE'] in early_available_states:
-            early_available_states.remove(user['NEXT_STATE'])
+            if user['NEXT_STATE'] != 'early_in_treatment_summary':
+                early_available_states.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
+
 
 available_states_pre = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
                     'summarize_reiterate_problem']
@@ -87,7 +105,7 @@ def generate_prompt_pre(vars: Dict[str, Any]):
     if 'PROBLEM_DETAILS' not in vars:
         prompt_parts.append('"PROBLEM_DETAILS": "Having trouble at work due to not being able to manage time, boss does not like them, eats too much"')
     if 'USER_SOLUTIONS' not in vars:
-        prompt_parts.append('"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better"')
+        prompt_parts.append('"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better, tried to communicate"')
 
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states_pre) + "}"}')
@@ -102,25 +120,25 @@ def generate_prompt_pre(vars: Dict[str, Any]):
 # Set problem response variables and the next state
 def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 
-    user_problem_summary = user.get('PROBLEM_SUMMARY', 'n/a')
+    user_problem_summary = user.get('PROBLEM_SUMMARY')
     if user_problem_summary != 'n/a':
-        vars_problem_summary = vars.get('PROBLEM_SUMMARY', '')
+        vars_problem_summary = vars.get('PROBLEM_SUMMARY')
         if vars_problem_summary and vars_problem_summary != user_problem_summary:
             vars['PROBLEM_SUMMARY'] = f"{vars_problem_summary}, {user_problem_summary}"
         else:
             vars['PROBLEM_SUMMARY'] = user_problem_summary
 
-    user_problem_details = user.get('PROBLEM_DETAILS', 'n/a')
+    user_problem_details = user.get('PROBLEM_DETAILS')
     if user_problem_details != 'n/a':
-        vars_problem_details = vars.get('PROBLEM_DETAILS', '')
+        vars_problem_details = vars.get('PROBLEM_DETAILS')
         if vars_problem_details and vars_problem_details != user_problem_details:
             vars['PROBLEM_DETAILS'] = f"{vars_problem_details}, {user_problem_details}"
         else:
             vars['PROBLEM_DETAILS'] = user_problem_details
 
-    user_solutions = user.get('USER_SOLUTIONS', 'n/a')
+    user_solutions = user.get('USER_SOLUTIONS')
     if user_solutions != 'n/a':
-        vars_user_solutions = vars.get('USER_SOLUTIONS', '')
+        vars_user_solutions = vars.get('USER_SOLUTIONS')
         if vars_user_solutions and vars_user_solutions != user_solutions:
             vars['USER_SOLUTIONS'] = f"{vars_user_solutions}, {user_solutions}"
         else:
