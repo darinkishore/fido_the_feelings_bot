@@ -29,7 +29,7 @@ from emora_stdm import Macro, Ngrams
 import regexutils
 
 OPENAI_API_KEY_PATH = 'resources/openai_api.txt'
-CHATGPT_MODEL = 'gpt-3.5-turbo'
+CHATGPT_MODEL = 'gpt-4'
 
 
 class MacroMakeFillerText(Macro):
