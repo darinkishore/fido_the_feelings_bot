@@ -45,7 +45,7 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
 
 early_available_states = ['user_emotional_state', 'user_coping_mechanisms', 'user_support_system', 'user_past_experiences',
                          'user_stressors', 'user_self_awareness',
-                          'user_attempts_fixing_problem', 'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
+                          'what_went_well_last_attempt', 'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
                           'get_user_ideas_on_what_will_help', 'early_in_treatment_summary']
 
 early_vars = ['EMOTIONAL_STATE', 'COPING_MECHANISMS', 'SUPPORT_SYSTEM', 'PAST_EXPERIENCES', 'STRESSORS', 'SELF_AWARENESS',
@@ -53,11 +53,11 @@ early_vars = ['EMOTIONAL_STATE', 'COPING_MECHANISMS', 'SUPPORT_SYSTEM', 'PAST_EX
               'USER_IDEAS_ON_WHAT_WILL_HELP', 'GOALS_FROM_THERAPY']
 
 
-def generate_prompt_early(vars: Dict[str, Any]):
+def generate_prompt_pre_early(vars: Dict[str, Any]):
     prompt_parts = []
-    for state in early_vars:
-        if state.upper() not in vars:
-            prompt_parts.append(f'"{state.upper()}": "example_value_for_{state}"')
+    for var in early_vars:
+        if var not in vars:
+            prompt_parts.append(f'"{var}": "example_value_for_{var.lower()}"')
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
 
@@ -66,7 +66,6 @@ def generate_prompt_early(vars: Dict[str, Any]):
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
-
 
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
     for state in early_vars:
@@ -103,7 +102,7 @@ def generate_prompt_pre(vars: Dict[str, Any]):
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states_pre) + "}"}')
 
-    prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
+    prompt = f'Please provide the missing information and choose only ONE next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
              f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 

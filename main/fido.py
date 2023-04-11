@@ -90,6 +90,11 @@ pretreatment = {
 # what are some small steps you can take to address this issue?
 
 
+# maybe we shouldnt be asking directly
+
+# TODO: Add acknowledgement macro
+# TODO: Decide on things to trim.
+# TODO: Figure out how to create engaging responses.
 early_in_treatment = {
     'state': 'early_in_treatment_base',
     '`Great! Let\'s start by understanding your goals and expectations from this therapy session.`': {
@@ -112,7 +117,7 @@ early_in_treatment = {
                                                     'state': 'user_self_awareness',
                                                     '`How would you assess your self-awareness regarding your issue?`': {
                                                         '#GET_EARLY_RESPONSE': {
-                                                            'state': 'user_attempts_fixing_problem',
+                                                            'state': 'what_went_well_last_attempt',
                                                             '`What do you think went well about your previous attempts at fixing the problem?`': {
                                                                 '#GET_EARLY_RESPONSE': {
                                                                     'state': 'user_finds_anticipated_challenges',
