@@ -12,7 +12,7 @@ from enum import Enum
 
 from emora_stdm.state_transition_dialogue_manager import dialogue_flow
 
-from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, MacroMakeFillerText
+from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, MacroMakeFillerText, MacroMakeToughResponse
 
 class User(Enum):
     call_name = 'call_name'
@@ -195,6 +195,7 @@ macros = {
     ),
     'GET_CALL_NAME': MacroNLG(get_call_name),
     'FILLER_RESPONSE': MacroMakeFillerText(),
+    'TOUGH_RESPONSE': MacroMakeToughResponse(),
 }
 
 

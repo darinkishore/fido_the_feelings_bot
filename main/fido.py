@@ -42,7 +42,7 @@ introduction = {
     }
 }
 
-# precontemplation, contemplation, and preparation
+# pretreatment, early in treatment, late in treatment
 
 pretreatment = {
     # how do you see or understand the situation?
@@ -114,22 +114,24 @@ pretreatment = {
 # what are some potential roadblocks or challenges that you anticipate in addressing this issue?
 # what are some small steps you can take to address this issue?
 
+
 early_in_treatment = {
     'state': 'early_in_treatment_base',
     # See what the main issue is in terms of how the user has tried to tackle the problem
     '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
+            '#TOUGH_RESPONSE': {}, # I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
+        }
             # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
             # maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
-
-        }
     },
 
     'state': 'early_in_treatment_influence',
     # See how the problem influences the user and how the user influences the problem
     '`When and how does the problem influence you; and when do you influence it?`': {
         '#GET_PROBLEM_RESPONSE': {
-
+            '#FILLER_RESPONSE`early_in_treatment_influence': {
+            }
         }
     },
 
@@ -137,7 +139,8 @@ early_in_treatment = {
     # See what the user's idea or theory about what will help is in terms of tackling these issues
     '`What\'s your ideas or theories about what wil help?`': {
         '#GET_PROBLEM_RESPONSE': {
-
+        '#FILLER_RESPONSE`early_in_treatment_idea`': {
+            }
         }
     },
 
@@ -145,7 +148,8 @@ early_in_treatment = {
     # See what small steps the user can take to address the issue so they can gain some confidence
     '`What are some small steps you can take to address this issue?`': {
         '#GET_PROBLEM_RESPONSE': {
-
+            '#FILLER_RESPONSE`early_in_treatment_small_steps`': {
+            }
         }
     },
     'state': 'pretreatment_summary',
@@ -169,8 +173,44 @@ early_in_treatment = {
 # evaluation
 post_treatment = {
     'state': 'post_treatment_base',
+    '`Do you feel that today\'s session has made a positive impact on your situation?`': {
+        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+            '`Great! Let\'s move on to the next step.`': 'post_treatment_secondary'
+        },
+        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+            '`Can you explain why the session didn\'t positively impact your situation?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
+        },
+        'error': {
+            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                '#GET_PROBLEM_RESPONSE': {},
+            }
+        }
+    },
 
-}
+    'state': 'post_treatment_secondary',
+    '`Can you identify any specific methods or steps that you found particularly beneficial?`': {
+        '#GET_PROBLEM_RESPONSE': 'post_treatment_tertiary'
+        },
+
+    'state': 'post_treatment_tertiary',
+    '`How would you describe the effectiveness of this session?`': {
+        '#GET_PROBLEM_RESPONSE': 'post_treatment_quaternary'
+        },
+
+    'state': 'post_treatment_quaternary',
+    '`what are some areas that you felt like I fell short in?`': {
+        '#GET_PROBLEM_RESPONSE': 'post_treatment_quinary'
+        # maybe add a macro to store this specific response in a list of responses or a sqllite database
+        },
+
+    }
+
+
+
+
+
 
 # we gotta solo implement preparation/action stages, which is where the actual "therapizing" happens
 
