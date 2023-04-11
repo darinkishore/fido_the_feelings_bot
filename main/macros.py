@@ -44,14 +44,18 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
 
 
 early_available_states = ['user_emotional_state', 'user_coping_mechanisms', 'user_support_system', 'user_past_experiences',
-                          'user_goals_and_expectations', 'user_stressors', 'user_self_awareness',
+                         'user_stressors', 'user_self_awareness',
                           'user_attempts_fixing_problem', 'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
                           'get_user_ideas_on_what_will_help', 'early_in_treatment_summary']
+
+early_vars = ['EMOTIONAL_STATE', 'COPING_MECHANISMS', 'SUPPORT_SYSTEM', 'PAST_EXPERIENCES', 'STRESSORS', 'SELF_AWARENESS',
+              'ATTEMPTS_FIXING_PROBLEM', 'FINDS_ANTICIPATED_CHALLENGES', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA',
+              'USER_IDEAS_ON_WHAT_WILL_HELP', 'GOALS_FROM_THERAPY']
 
 
 def generate_prompt_early(vars: Dict[str, Any]):
     prompt_parts = []
-    for state in early_available_states:
+    for state in early_vars:
         if state.upper() not in vars:
             prompt_parts.append(f'"{state.upper()}": "example_value_for_{state}"')
 
@@ -65,7 +69,7 @@ def generate_prompt_early(vars: Dict[str, Any]):
 
 
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
-    for state in early_available_states:
+    for state in early_vars:
         user_value = user.get(state.upper())
         if user_value != 'n/a':
             vars_value = vars.get(state.upper())
