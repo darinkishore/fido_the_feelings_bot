@@ -16,6 +16,8 @@ from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, Macro
     MacroMakeSummary, MacroMakeSuggestions
 
 
+# scope refinement: fido will help you solve an emotional problem.
+
 class User(Enum):
     call_name = 'call_name'
     hometown = 1
@@ -32,6 +34,7 @@ def get_call_name(vars: Dict[str, Any]):
     ls = vars[User.call_name.name]
     return ls
 
+
 def set_call_names(vars: Dict[str, Any], user: Dict[str, Any]):
     vars[User.call_name.value] = user[User.call_name.value]
 
@@ -40,9 +43,15 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
+early_available_states = ['user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
+                          'get_user_ideas_on_what_will_help',
+                          'early_in_treatment_summary']
+
 
 def generate_prompt_early(vars: Dict[str, Any]):
     prompt_parts = []
+    if 'WHAT_WENT_WELL_LAST_TIME' not in vars:
+        prompt_parts.append('"WHAT_WENT_WELL_LAST_TIME": "was able to communicate with professors directly"')
     if 'PROBLEM_CHALLENGE' not in vars:
         prompt_parts.append('"PROBLEM_CHALLENGE": "having the courage, the consequences, its difficult"')
     if 'PROBLEM_INFLUENCE' not in vars:
@@ -50,7 +59,6 @@ def generate_prompt_early(vars: Dict[str, Any]):
     if 'PROBLEM_IDEA' not in vars:
         prompt_parts.append(
             '"PROBLEM_IDEA": "could eat better, could manage my time better, could communicate better, get help"')
-
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
 
@@ -60,8 +68,6 @@ def generate_prompt_early(vars: Dict[str, Any]):
 
     return prompt
 
-early_available_states = ['how_problem_influences_user_vice_versa', 'get_user_ideas_on_what_will_help',
-                           'early_in_treatment_summary']
 
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
     user_problem_challenge = user.get('PROBLEM_CHALLENGE')
@@ -95,18 +101,20 @@ def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['__target__'] = f"{user['NEXT_STATE']}"
 
 
-available_states_pre = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
-                    'summarize_reiterate_problem']
+available_states_pre = ['user_understanding_of_prob', 'attempted_solutions', 'when_problem_not_present',
+                        'summarize_reiterate_problem']
+
 
 def generate_prompt_pre(vars: Dict[str, Any]):
     prompt_parts = []
     if 'PROBLEM_SUMMARY' not in vars:
         prompt_parts.append('"PROBLEM_SUMMARY": "trouble at work"')
     if 'PROBLEM_DETAILS' not in vars:
-        prompt_parts.append('"PROBLEM_DETAILS": "Having trouble at work due to not being able to manage time, boss does not like them, eats too much"')
+        prompt_parts.append(
+            '"PROBLEM_DETAILS": "Having trouble at work due to not being able to manage time, boss does not like them, eats too much"')
     if 'USER_SOLUTIONS' not in vars:
-        prompt_parts.append('"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better, tried to communicate"')
-
+        prompt_parts.append(
+            '"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better, tried to communicate"')
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states_pre) + "}"}')
 
@@ -119,7 +127,6 @@ def generate_prompt_pre(vars: Dict[str, Any]):
 
 # Set problem response variables and the next state
 def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
-
     user_problem_summary = user.get('PROBLEM_SUMMARY')
     if user_problem_summary != 'n/a':
         vars_problem_summary = vars.get('PROBLEM_SUMMARY')
@@ -154,16 +161,18 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 macros = {
     'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
         generate_prompt_pre,
-        {'PROBLEM_SUMMARY': 'issues at work', 'PROBLEM_DETAILS': 'Having trouble at work due to not being able to manage time, boss does not like them, eats too much',
+        {'PROBLEM_SUMMARY': 'issues at work',
+         'PROBLEM_DETAILS': 'Having trouble at work due to not being able to manage time, boss does not like them, eats too much',
          'USER_SOLUTIONS': 'ate less, delegated work, managed time better',
          'NEXT_STATE': '...'},
         {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': 'n/a',
          'NEXT_STATE': '...'},
         set_problem_response
     ),
-'GET_EARLY_RESPONSE': MacroGPTJSONNLG(
+    'GET_EARLY_RESPONSE': MacroGPTJSONNLG(
         generate_prompt_early,
-        {'PROBLEM CHALLENGE': 'its hard', 'PROBLEM_INFLUENCE': 'hard to study in school', 'PROBLEM_IDEA': 'could eat less',
+        {'PROBLEM CHALLENGE': 'its hard', 'PROBLEM_INFLUENCE': 'hard to study in school',
+         'PROBLEM_IDEA': 'could eat less',
          'NEXT_STATE': '...'},
         {'PROBLEM_CHALLENGE': 'n/a', 'PROBLEM_INFLUENCE': 'n/a', 'PROBLEM_IDEA': 'n/a',
          'NEXT_STATE': '...'},
@@ -175,7 +184,7 @@ macros = {
         {User.call_name.name: "n/a"},
         set_call_names
     ),
-    
+
     'GET_CALL_NAME': MacroNLG(get_call_name),
     'FILLER_RESPONSE': MacroMakeFillerText(),
     'TOUGH_RESPONSE': MacroMakeToughResponse(),

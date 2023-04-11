@@ -93,33 +93,38 @@ pretreatment = {
 early_in_treatment = {
     'state': 'early_in_treatment_base',
     # See what the main issue is in terms of how the user has tried to tackle the problem
-    '`Great! Let\'s move on to the next step. What are some blockers or challenges that you anticipate in addressing this issue?`': {
+    '`Great! Let\'s move on to the next step. What do you think went well about your previous attempts at fixing the problem?`': {
         '#GET_EARLY_RESPONSE': {
-            'state': 'how_problem_influences_user_vice_versa',
-            # See how the problem influences the user and how the user influences the problem
-            '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
+            'state': 'user_finds_anticipated_challenges',
+            '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
                 '#GET_EARLY_RESPONSE': {
-                    'state': 'get_user_ideas_on_what_will_help',
-                    # See what the user's idea or theory about what will help is in terms of tackling these issues
-                    '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
+                    'state': 'how_problem_influences_user_vice_versa',
+                    # See how the problem influences the user and how the user influences the problem
+                    '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
                         '#GET_EARLY_RESPONSE': {
-                            'state': 'early_in_treatment_summary',
-                            '`Ok` #GET_SUGGESTION `I need to make sure before we move on.`': {
-                                '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-                                    '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
-                                },
-                                '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
-                                    '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                        '#GET_PROBLEM_RESPONSE': {},
-                                    }
-                                },
-                                'error': {
-                                    '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                        '#GET_PROBLEM_RESPONSE': {},
+                            'state': 'get_user_ideas_on_what_will_help',
+                            # See what the user's idea or theory about what will help is in terms of tackling these issues
+                            '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
+                                '#GET_EARLY_RESPONSE': {
+                                    'state': 'early_in_treatment_summary',
+                                    '`Ok` #GET_SUGGESTION `I need to make sure before we move on.`': {
+                                        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+                                            '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
+                                        },
+                                        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+                                            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                                '#GET_PROBLEM_RESPONSE': {},
+                                            }
+                                        },
+                                        'error': {
+                                            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                                '#GET_PROBLEM_RESPONSE': {},
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
+                        },
                     }
                 }
             },
