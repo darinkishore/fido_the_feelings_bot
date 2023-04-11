@@ -71,7 +71,7 @@ class MacroMakeSummary(Macro):
 
 class MacroMakeSuggestions(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        output = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, solutions: {vars['USER_SOLUTIONS']}, influence: {vars['PROBLEM_INFLUENCE']}, and ideas: {vars['PROBLEM_IDEA']} can you provide some suggestions for small immediate improvements? "
+        output = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, solutions: {vars['USER_SOLUTIONS']}, challenge:'{vars['PROBLEM_CHALLENGE']} influence: {vars['PROBLEM_INFLUENCE']}, and ideas: {vars['PROBLEM_IDEA']} can you provide some suggestions for small immediate improvements? "
         f"Respond with only the content of the summary. It should be extremely detailed, but brief, and show that you truly listened to the problem. Respond as if speaking to the user and ask if this solution is of interest in yes or no format")
         vars['SUGGESTION'] = output
         return vars['SUGGESTION']
