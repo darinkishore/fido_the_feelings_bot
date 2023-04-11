@@ -64,8 +64,8 @@ class MacroMakeToughResponse(Macro):
 
 class MacroMakeSummary(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        vars['SUMMARY'] = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a recap of this info? "
-        f"Respond with only the content of the summary.")
+        vars['SUMMARY'] = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a very very detailed recap of this info? "
+        f"Respond with only the content of the summary. It should be extremely detailed and show that you truly listened to the problem. ")
 
 
 class MacroGPTJSON(Macro):
@@ -146,7 +146,9 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
             {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
                                          'In any function responses you return, you must think from the perspective of a single session therapist. '},
             {'role': 'user', 'content': input},
-        ]
+        ],
+        temperature=0.4,
+
     )
     output = response['choices'][0]['message']['content'].strip()
 

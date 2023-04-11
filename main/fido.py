@@ -62,7 +62,7 @@ pretreatment = {
                                             '#GET_PROBLEM_RESPONSE': {
                                                 '#FILLER_RESPONSE`when_prob_not_present`': {
                                                     'state': 'summarize_reiterate_problem',
-                                                    '#GET_SUMMARY`It sounds like $SUMMARY. Is that right?`': {
+                                                    '`That shit is real whack.`#GET_SUMMARY`If I\'m right, it sounds like your problem is $SUMMARY. Right?`': {
                                                         '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
                                                             '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
                                                         },
@@ -207,4 +207,4 @@ df.local_transitions(pretreatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    df.run(debugging=False)
+    df.run(debugging=True)

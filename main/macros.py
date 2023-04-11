@@ -57,7 +57,7 @@ def generate_prompt(vars: Dict[str, Any]):
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states) + "}"}')
 
     prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
-             f'summarize and reiterate the problem.' \
+             f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STAGE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
@@ -81,11 +81,11 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
 macros = {
     'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
         generate_prompt,
-        {'PROBLEM_SUMMARY': 'trouble at work', 'PROBLEM_DETAILS': 'Having trouble at work due to not being able to manage time, boss does not like them, eats too much',
+        {'PROBLEM_SUMMARY': 'issues at work', 'PROBLEM_DETAILS': 'Having trouble at work due to not being able to manage time, boss does not like them, eats too much',
          'USER_SOLUTIONS': 'ate less, delegated work, managed time better',
-         'NEXT_STATE': 'summarize_reiterate_problem'},
+         'NEXT_STATE': '...'},
         {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': 'n/a',
-         'NEXT_STATE': 'summarize_reiterate_problem'},
+         'NEXT_STATE': '...'},
         set_problem_response
     ),
     'SET_CALL_NAME': MacroGPTJSON(
