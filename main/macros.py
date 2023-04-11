@@ -146,10 +146,9 @@ def set_friend_confusion(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['CONFUSION'] = user['CONFUSION']
     generate_friend_advice(vars)
 
-
+available_states = ['user_understanding_of_prob', 'what_will_help', 'attempts_to_solve', 'when_problem_not_present',
+                        'enough_info_gathered']
 def generate_prompt(vars: Dict[str, Any]):
-    available_states = ['user_understanding_of_prob', 'what_will_help', 'attempts_to_solve', 'when_problem_not_present',
-                        'end']
 
     prompt_parts = []
     if 'PROBLEM_SUMMARY' not in vars:
@@ -176,7 +175,9 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
+        available_states.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
+
 
 
 macros = {
