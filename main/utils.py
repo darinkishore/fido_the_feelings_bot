@@ -52,14 +52,14 @@ class MacroMakeFillerText(Macro):
 
 class MacroMakeToughResponse(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        tough_response = {'I\'m sorry to hear that. I\'m here to support you.',
+        tough_response = ['I\'m sorry to hear that. I\'m here to support you.',
                             "I'm sorry you're going through that.",
                             "I'm sorry you're feeling that way.",
                             "I'm sorry you're having a hard time.",
                             "I'm sorry you're struggling with that.",
                             "It\'s really sad to know that. I want you to know that I'm by your side.",
                             "I'm sympathetic to your situation. You can count on me for support.",
-                            "It's disheartening to hear that. I want to assure you that I'm here to help you!"}
+                            "It's disheartening to hear that. I want to assure you that I'm here to help you!"]
         return random.choice(tough_response)
 
 class MacroGPTJSON(Macro):
