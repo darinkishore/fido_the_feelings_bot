@@ -46,26 +46,18 @@ introduction = {
 
 pretreatment = {
     'state': 'user_understanding_of_prob',
-    '`Tell me more about it.`': {
+    '#FILLER_RESPONSE `Tell me more about it.`': {
         '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`details_abt_prob`': {
-                'state': 'what_will_help',
-                '`What do you think will help?`': {
-                    '#GET_PROBLEM_RESPONSE': {
-                        '#FILLER_RESPONSE`what_will_help`': {
                             'state': 'attempted_solutions',
-                            '`How have you tried to solve the problem so far, and how did it work?`': {
+                            '#TOUGH_RESPONSE `How have you tried to solve the problem so far, and how did it work?`': {
                                 '#GET_PROBLEM_RESPONSE': {
-                                    '#FILLER_RESPONSE`attempts_to_solve`': {
                                         'state': 'when_problem_not_present',
-                                        '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
+                                        '#FILLER_RESPONSE `When the problem isn’t present (or isn’t bad), what is going on differently?`': {
                                             '#GET_PROBLEM_RESPONSE': {
-                                                '#FILLER_RESPONSE`when_prob_not_present`': {
                                                     'state': 'summarize_reiterate_problem',
-                                                    '`That shit is real whack. `#GET_SUMMARY` Just want to make sure I understand.`': {
-                                                        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-                                                            '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
-                                                        },
+                                                    '`Thank you for sharing. `#GET_SUMMARY` Just want to make sure I understand.`': {
+                                                        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': 'early_in_treatment_base',
+
                                                         '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
                                                             '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
                                                                 '#GET_PROBLEM_RESPONSE': {}
@@ -85,13 +77,13 @@ pretreatment = {
                                 }
                             },
                         }
-                    }
-                },
 
-            }
-        },
-    },
-}
+
+
+
+
+
+
 
 # IF ALL INFORMATION IS GATHERED, PRESENT A SUMMARY OF THE INFORMATION.
 # THEN GO TO EARLY IN TREATMENT.
@@ -108,43 +100,20 @@ pretreatment = {
 early_in_treatment = {
     'state': 'early_in_treatment_base',
     # See what the main issue is in terms of how the user has tried to tackle the problem
-    '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#TOUGH_RESPONSE': {},
-            # I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
-        }
-        # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
-        # maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
-    },
+    '`Great! Let\'s move on to the next step. What are some blockers or challenges that you anticipate in addressing this issue?`': {
+        '#GET_EARLY_RESPONSE': {
+                'state': 'early_in_treatment_influence',
+                # See how the problem influences the user and how the user influences the problem
+                '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
+                    '#GET_EARLY_RESPONSE': {
+                            'state': 'early_in_treatment_idea',
+                            # See what the user's idea or theory about what will help is in terms of tackling these issues
+                            '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
+                                '#GET_EARLY_RESPONSE': {
 
-    'state': 'early_in_treatment_influence',
-    # See how the problem influences the user and how the user influences the problem
-    '`When and how does the problem influence you; and when do you influence it?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`early_in_treatment_influence': {
-            }
-        }
-    },
 
-    'state': 'early_in_treatment_idea',
-    # See what the user's idea or theory about what will help is in terms of tackling these issues
-    '`What\'s your ideas or theories about what wil help?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`early_in_treatment_idea`': {
-            }
-        }
-    },
-
-    'state': 'early_in_treatment_small_steps',
-    # See what small steps the user can take to address the issue so they can gain some confidence
-    '`What are some small steps you can take to address this issue?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`early_in_treatment_small_steps`': {
-            }
-        }
-    },
-    'state': 'pretreatment_summary',
-    '`It sounds like $SUMMARY. With the information provided, do you feel confident in how to address your issue?`': {
+'state': 'early_in_treatment_summary',
+    '`Ok` #GET_SUGGESTION `I need to make sure before we move on.`': {
         '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
             '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
         },
@@ -160,6 +129,28 @@ early_in_treatment = {
         }
     }
 }
+                                                }
+                                            }
+                                        },
+                                    }
+                                }
+                            }
+
+
+
+
+            # I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
+
+        # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
+        # maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
+
+
+
+
+
+
+
+
 
 # evaluation
 post_treatment = {
@@ -204,6 +195,7 @@ post_treatment = {
 df = DialogueFlow('start', end_state='end')
 df.local_transitions(introduction)
 df.local_transitions(pretreatment)
+df.local_transitions(early_in_treatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':

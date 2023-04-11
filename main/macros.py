@@ -13,7 +13,7 @@ from enum import Enum
 from emora_stdm.state_transition_dialogue_manager import dialogue_flow
 
 from utils import MacroGPTJSON, MacroNLG, MacroGPTJSONNLG, gpt_completion, MacroMakeFillerText, MacroMakeToughResponse, \
-    MacroMakeSummary
+    MacroMakeSummary, MacroMakeSuggestions
 
 
 class User(Enum):
@@ -40,11 +40,47 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
-available_states = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
+available_states_pre = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
                     'summarize_reiterate_problem']
 
+early_available_states = ['early_in_treatment_influence', 'early_in_treatment_idea',
+                           'early_in_treatment_summary']
 
-def generate_prompt(vars: Dict[str, Any]):
+def generate_prompt_early(vars: Dict[str, Any]):
+    prompt_parts = []
+    if 'PROBLEM_CHALLENGE' not in vars:
+        prompt_parts.append('"PROBLEM_CHALLENGE": "having the courage, the consequences, its difficult"')
+    if 'PROBLEM_INFLUENCE' not in vars:
+        prompt_parts.append('"PROBLEM_INFLUENCE": "ruins my life, makes me angry, at night, all the time"')
+    if 'PROBLEM_IDEA' not in vars:
+        prompt_parts.append(
+            '"PROBLEM_IDEA": "could eat better, could manage my time better, could communicate better, get help"')
+
+
+    prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
+
+    prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
+             f'provide a summary. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
+             f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
+
+    return prompt
+
+def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
+    if user['PROBLEM_CHALLENGE'] != 'n/a':
+        vars['PROBLEM_CHALLENGE'] = user['PROBLEM_CHALLENGE']
+    if user['PROBLEM_INFLUENCE'] != 'n/a':
+        vars['PROBLEM_INFLUENCE'] = user['PROBLEM_INFLUENCE']
+    if user['PROBLEM_IDEA'] != 'n/a':
+        vars['PROBLEM_IDEA'] = user['PROBLEM_IDEA']
+
+
+    if 'NEXT_STATE' in user:
+        if user['NEXT_STATE'] in early_available_states:
+            early_available_states.remove(user['NEXT_STATE'])
+        vars['__target__'] = f"{user['NEXT_STATE']}"
+
+
+def generate_prompt_pre(vars: Dict[str, Any]):
     prompt_parts = []
     if 'PROBLEM_SUMMARY' not in vars:
         prompt_parts.append('"PROBLEM_SUMMARY": "trouble at work"')
@@ -54,7 +90,7 @@ def generate_prompt(vars: Dict[str, Any]):
         prompt_parts.append('"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better"')
 
 
-    prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states) + "}"}')
+    prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states_pre) + "}"}')
 
     prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
              f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
@@ -73,20 +109,28 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
-        if user['NEXT_STATE'] in available_states:
-            available_states.remove(user['NEXT_STATE'])
+        if user['NEXT_STATE'] in available_states_pre:
+            available_states_pre.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
 
 
 macros = {
     'GET_PROBLEM_RESPONSE': MacroGPTJSONNLG(
-        generate_prompt,
+        generate_prompt_pre,
         {'PROBLEM_SUMMARY': 'issues at work', 'PROBLEM_DETAILS': 'Having trouble at work due to not being able to manage time, boss does not like them, eats too much',
          'USER_SOLUTIONS': 'ate less, delegated work, managed time better',
          'NEXT_STATE': '...'},
         {'PROBLEM_SUMMARY': 'n/a', 'PROBLEM_DETAILS': 'n/a', 'USER_SOLUTIONS': 'n/a',
          'NEXT_STATE': '...'},
         set_problem_response
+    ),
+'GET_EARLY_RESPONSE': MacroGPTJSONNLG(
+        generate_prompt_early,
+        {'PROBLEM CHALLENGE': 'its hard', 'PROBLEM_INFLUENCE': 'hard to study in school', 'PROBLEM_IDEA': 'could eat less',
+         'NEXT_STATE': '...'},
+        {'PROBLEM_CHALLENGE': 'n/a', 'PROBLEM_INFLUENCE': 'n/a', 'PROBLEM_IDEA': 'n/a',
+         'NEXT_STATE': '...'},
+        set_early_response
     ),
     'SET_CALL_NAME': MacroGPTJSON(
         'What does the speaker want to be called? Give only one name. Respond in the one-line JSON format such as {"call_names": ["Mike", "Michael"]}: ',
@@ -99,6 +143,7 @@ macros = {
     'FILLER_RESPONSE': MacroMakeFillerText(),
     'TOUGH_RESPONSE': MacroMakeToughResponse(),
     'GET_SUMMARY': MacroMakeSummary(),
+    'GET_SUGGESTION': MacroMakeSuggestions(),
 }
 
 """
