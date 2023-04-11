@@ -186,3 +186,9 @@ df.add_macros(macros)
 
 if __name__ == '__main__':
     df.run(debugging=True)
+
+
+"""
+curl https://api.openai.com/v1/models -H "Authorization: Bearer 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" >openai-models-access-$(date +%Y%m%d-%H%M%S).json
+"""
+
