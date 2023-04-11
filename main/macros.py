@@ -43,22 +43,17 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
-early_available_states = ['user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
-                          'get_user_ideas_on_what_will_help',
-                          'early_in_treatment_summary']
+early_available_states = ['user_emotional_state', 'user_coping_mechanisms', 'user_support_system', 'user_past_experiences',
+                          'user_goals_and_expectations', 'user_stressors', 'user_self_awareness',
+                          'user_attempts_fixing_problem', 'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
+                          'get_user_ideas_on_what_will_help', 'early_in_treatment_summary']
 
 
 def generate_prompt_early(vars: Dict[str, Any]):
     prompt_parts = []
-    if 'WHAT_WENT_WELL_LAST_TIME' not in vars:
-        prompt_parts.append('"WHAT_WENT_WELL_LAST_TIME": "was able to communicate with professors directly"')
-    if 'PROBLEM_CHALLENGE' not in vars:
-        prompt_parts.append('"PROBLEM_CHALLENGE": "having the courage, the consequences, its difficult"')
-    if 'PROBLEM_INFLUENCE' not in vars:
-        prompt_parts.append('"PROBLEM_INFLUENCE": "ruins my life, makes me angry, at night, all the time"')
-    if 'PROBLEM_IDEA' not in vars:
-        prompt_parts.append(
-            '"PROBLEM_IDEA": "could eat better, could manage my time better, could communicate better, get help"')
+    for state in early_available_states:
+        if state.upper() not in vars:
+            prompt_parts.append(f'"{state.upper()}": "example_value_for_{state}"')
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
 
@@ -70,35 +65,21 @@ def generate_prompt_early(vars: Dict[str, Any]):
 
 
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
-    user_problem_challenge = user.get('PROBLEM_CHALLENGE')
-    if user_problem_challenge != 'n/a':
-        vars_problem_challenge = vars.get('PROBLEM_CHALLENGE')
-        if vars_problem_challenge and vars_problem_challenge != user_problem_challenge:
-            vars['PROBLEM_CHALLENGE'] = f"{vars_problem_challenge}, {user_problem_challenge}"
-        else:
-            vars['PROBLEM_CHALLENGE'] = user_problem_challenge
-
-    user_problem_influence = user.get('PROBLEM_INFLUENCE')
-    if user_problem_influence != 'n/a':
-        vars_problem_influence = vars.get('PROBLEM_INFLUENCE')
-        if vars_problem_influence and vars_problem_influence != user_problem_influence:
-            vars['PROBLEM_INFLUENCE'] = f"{vars_problem_influence}, {user_problem_influence}"
-        else:
-            vars['PROBLEM_INFLUENCE'] = user_problem_influence
-
-    user_problem_idea = user.get('PROBLEM_IDEA')
-    if user_problem_idea != 'n/a':
-        vars_problem_idea = vars.get('PROBLEM_IDEA')
-        if vars_problem_idea and vars_problem_idea != user_problem_idea:
-            vars['PROBLEM_IDEA'] = f"{vars_problem_idea}, {user_problem_idea}"
-        else:
-            vars['PROBLEM_IDEA'] = user_problem_idea
+    for state in early_available_states:
+        user_value = user.get(state.upper())
+        if user_value != 'n/a':
+            vars_value = vars.get(state.upper())
+            if vars_value and vars_value != user_value:
+                vars[state.upper()] = f"{vars_value}, {user_value}"
+            else:
+                vars[state.upper()] = user_value
 
     if 'NEXT_STATE' in user:
         if user['NEXT_STATE'] in early_available_states:
             if user['NEXT_STATE'] != 'early_in_treatment_summary':
                 early_available_states.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
+
 
 
 available_states_pre = ['user_understanding_of_prob', 'attempted_solutions', 'when_problem_not_present',
