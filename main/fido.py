@@ -45,61 +45,59 @@ introduction = {
 # precontemplation, contemplation, and preparation
 
 pretreatment = {
-    # how do you see or understand the situation?
     'state': 'user_understanding_of_prob',
     '`How do you see or understand the situation?`': {
         '#GET_PROBLEM_RESPONSE': {
             '#FILLER_RESPONSE`details_abt_prob`': {
+                'state': 'what_will_help',
+                '`What do you think will help?`': {
+                    '#GET_PROBLEM_RESPONSE': {
+                        '#FILLER_RESPONSE`what_will_help`': {}
+                    }
+                },
+                'state': 'attempts_to_solve',
+                '`How have you tried to solve the problem so far, and how did it work?`': {
+                    '#GET_PROBLEM_RESPONSE': {
+                        '#FILLER_RESPONSE`attempts_to_solve`': {}
+                    }
+                },
+                'state': 'when_problem_not_present',
+                '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
+                    '#GET_PROBLEM_RESPONSE': {
+                        '#FILLER_RESPONSE`when_prob_not_present`': {}
+                    }
+                },
+                'state': 'pretreatment_summary',
+                '`It sounds like $SUMMARY. Is that right?`': {
+                    '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+                        '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
+                    },
+                    '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+                        '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                            '#GET_PROBLEM_RESPONSE': {}
+                        }
+                    },
+                    'error': {
+                        '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                            '#GET_PROBLEM_RESPONSE': {}
+                        }
+                    }
+                }
 
-            }
-        }
-    },
-
-    # What do you think will help?
-    'state': 'what_will_help',
-    '`What do you think will help?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`what_will_help`': {
-
-            }
-        }
-    },
-
-    # How have you tried to solve the problem so far -- how did it work?
-    'state': 'attempts_to_solve',
-    '`How have you tried to solve the problem so far, and how did it work?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`attempts_to_solve`': {
-
-            }
-        }
-    },
-
-    # When the problem isn’t present (or isn’t bad), what is going on differently?
-    'state': 'when_problem_not_present',
-    '`When the problem isn’t present (or isn’t bad), what is going on differently?`': {
-        '#GET_PROBLEM_RESPONSE': {
-            '#FILLER_RESPONSE`when_prob_not_present`': {
-
-            }
-        }
-    },
-
-    'state': 'pretreatment_summary',
-    '`It sounds like $SUMMARY. Is that right?`': {
-        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-            '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
-        },
-        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
-            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {},
             }
         },
-        'error': {
-            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {},
-            }
-        }
+    },
+
+    'attempts_to_solve': {
+
+    },
+
+    'when_problem_not_present': {
+
+    },
+
+    'pretreatment_summary': {
+
     }
 }
 
@@ -176,9 +174,9 @@ post_treatment = {
 
 
 df = DialogueFlow('start', end_state='end')
-df.load_transitions(introduction)
-df.load_transitions(pretreatment)
+df.local_transitions(introduction)
+df.local_transitions(pretreatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    df.run()
+    df.run(debugging=True)

@@ -159,7 +159,7 @@ def generate_prompt(vars: Dict[str, Any]):
     if 'USER_SOLUTIONS' not in vars:
         prompt_parts.append('"USER_SOLUTIONS": {"Delegation": false, "Time management": true}')
 
-    prompt_parts.append(f'"NEXT_STATE": {available_states}')
+    prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}: false" for state in available_states) + "}"}')
 
     prompt = f'Please provide the missing information and choose the next logically best state from the given options in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
@@ -176,7 +176,7 @@ def set_problem_response(vars: Dict[str, Any], user: Dict[str, Any]):
         vars['USER_SOLUTIONS'] = user['USER_SOLUTIONS']
 
     if 'NEXT_STATE' in user:
-        vars['__target__'] = user['NEXT_STATE']
+        vars['__target__'] = f"{user['NEXT_STATE']}"
 
 
 macros = {
