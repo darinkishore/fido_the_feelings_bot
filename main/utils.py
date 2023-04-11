@@ -64,8 +64,10 @@ class MacroMakeToughResponse(Macro):
 
 class MacroMakeSummary(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
-        vars['SUMMARY'] = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a very very detailed recap of this info? "
-        f"Respond with only the content of the summary. It should be extremely detailed and show that you truly listened to the problem. ")
+        output = gpt_completion(f"Given this information about the user's problem, summary: {vars['PROBLEM_SUMMARY']}, details: {vars['PROBLEM_DETAILS']}, and solutions: {vars['USER_SOLUTIONS']}, can you synthesize a very very detailed recap of this info? "
+        f"Respond with only the content of the summary. It should be extremely detailed and show that you truly listened to the problem. Respond as if speaking to the user and ask if you have the details right in yes or no format")
+        vars['SUMMARY'] = output
+        return vars['SUMMARY']
 
 
 class MacroGPTJSON(Macro):

@@ -40,7 +40,7 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
-available_states = ['user_understanding_of_prob', 'what_will_help', 'finding_solutions', 'when_problem_not_present',
+available_states = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
                     'summarize_reiterate_problem']
 
 
@@ -51,13 +51,13 @@ def generate_prompt(vars: Dict[str, Any]):
     if 'PROBLEM_DETAILS' not in vars:
         prompt_parts.append('"PROBLEM_DETAILS": "Having trouble at work due to not being able to manage time, boss does not like them, eats too much"')
     if 'USER_SOLUTIONS' not in vars:
-        prompt_parts.append('"USER_SOLUTIONS": "ate less, delegated work, managed time better"')
+        prompt_parts.append('"USER_SOLUTIONS": "tried to eat less, tried to delegate work, tried to manage time better"')
 
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states) + "}"}')
 
     prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
-             f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STAGE.' \
+             f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt

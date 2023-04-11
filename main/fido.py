@@ -46,14 +46,14 @@ introduction = {
 
 pretreatment = {
     'state': 'user_understanding_of_prob',
-    '`How do you see or understand the situation?`': {
+    '`Tell me more about it.`': {
         '#GET_PROBLEM_RESPONSE': {
             '#FILLER_RESPONSE`details_abt_prob`': {
                 'state': 'what_will_help',
                 '`What do you think will help?`': {
                     '#GET_PROBLEM_RESPONSE': {
                         '#FILLER_RESPONSE`what_will_help`': {
-                            'state': 'finding_solutions',
+                            'state': 'attempted_solutions',
                             '`How have you tried to solve the problem so far, and how did it work?`': {
                                 '#GET_PROBLEM_RESPONSE': {
                                     '#FILLER_RESPONSE`attempts_to_solve`': {
@@ -62,7 +62,7 @@ pretreatment = {
                                             '#GET_PROBLEM_RESPONSE': {
                                                 '#FILLER_RESPONSE`when_prob_not_present`': {
                                                     'state': 'summarize_reiterate_problem',
-                                                    '`That shit is real whack.`#GET_SUMMARY`If I\'m right, it sounds like your problem is $SUMMARY. Right?`': {
+                                                    '`That shit is real whack. `#GET_SUMMARY` Just want to make sure I understand.`': {
                                                         '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
                                                             '`Great! Let\'s move on to the next step.`': 'early_in_treatment_base'
                                                         },
