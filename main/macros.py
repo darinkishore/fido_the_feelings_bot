@@ -156,10 +156,13 @@ macros = {
     ),
     'GET_EARLY_RESPONSE': MacroGPTJSONNLG(
         generate_prompt_early,
-        {'PROBLEM CHALLENGE': 'its hard', 'PROBLEM_INFLUENCE': 'hard to study in school',
-         'PROBLEM_IDEA': 'could eat less',
+        {'EMOTIONAL_STATE': 'happy', 'COPING_MECHANISMS': 'meditation', 'SUPPORT_SYSTEM': 'family', 'PAST_EXPERIENCES': 'feels prepared by past', 'STRESSORS': 'workload, environment', 'SELF_AWARENESS': 'is self aware',
+              'ATTEMPTS_FIXING_PROBLEM': 'it was relaxing', 'FINDS_ANTICIPATED_CHALLENGES': 'lack motivation', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'ruining home life',
+              'USER_IDEAS_ON_WHAT_WILL_HELP': 'dividing workload', 'GOALS_FROM_THERAPY': 'learn time management strategies',
          'NEXT_STATE': '...'},
-        {'PROBLEM_CHALLENGE': 'n/a', 'PROBLEM_INFLUENCE': 'n/a', 'PROBLEM_IDEA': 'n/a',
+        {'EMOTIONAL_STATE': 'n/a', 'COPING_MECHANISMS': 'n/a', 'SUPPORT_SYSTEM': 'n/a/', 'PAST_EXPERIENCES': 'n/a', 'STRESSORS': 'n/a', 'SELF_AWARENESS': 'n/a',
+              'ATTEMPTS_FIXING_PROBLEM': 'n/a', 'FINDS_ANTICIPATED_CHALLENGES': 'n/a', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'n/a',
+              'USER_IDEAS_ON_WHAT_WILL_HELP': 'n/a', 'GOALS_FROM_THERAPY': 'n/a',
          'NEXT_STATE': '...'},
         set_early_response
     ),
