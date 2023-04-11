@@ -48,42 +48,35 @@ pretreatment = {
     'state': 'user_understanding_of_prob',
     '#FILLER_RESPONSE `Tell me more about it.`': {
         '#GET_PROBLEM_RESPONSE': {
-                            'state': 'attempted_solutions',
-                            '#TOUGH_RESPONSE `How have you tried to solve the problem so far, and how did it work?`': {
-                                '#GET_PROBLEM_RESPONSE': {
-                                        'state': 'when_problem_not_present',
-                                        '#FILLER_RESPONSE `When the problem isn’t present (or isn’t bad), what is going on differently?`': {
-                                            '#GET_PROBLEM_RESPONSE': {
-                                                    'state': 'summarize_reiterate_problem',
-                                                    '`Thank you for sharing. `#GET_SUMMARY` Just want to make sure I understand.`': {
-                                                        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': 'early_in_treatment_base',
+            'state': 'attempted_solutions',
+            '#TOUGH_RESPONSE `How have you tried to solve the problem so far, and how did it work?`': {
+                '#GET_PROBLEM_RESPONSE': {
+                    'state': 'when_problem_not_present',
+                    '#FILLER_RESPONSE `When the problem isn’t present (or isn’t bad), what is going on differently?`': {
+                        '#GET_PROBLEM_RESPONSE': {
+                            'state': 'summarize_reiterate_problem',
+                            '`Thank you for sharing. `#GET_SUMMARY` Just want to make sure I understand.`': {
+                                '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': 'early_in_treatment_base',
 
-                                                        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
-                                                            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                                                '#GET_PROBLEM_RESPONSE': {}
-                                                            }
-                                                        },
-                                                        'error': {
-                                                            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                                                '#GET_PROBLEM_RESPONSE': {}
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-                                            }
-                                        },
+                                '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+                                    '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                        '#GET_PROBLEM_RESPONSE': {}
+                                    }
+                                },
+                                'error': {
+                                    '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                        '#GET_PROBLEM_RESPONSE': {}
                                     }
                                 }
-                            },
+                            }
+
                         }
-
-
-
-
-
-
-
+                    }
+                },
+            }
+        }
+    },
+}
 
 # IF ALL INFORMATION IS GATHERED, PRESENT A SUMMARY OF THE INFORMATION.
 # THEN GO TO EARLY IN TREATMENT.
@@ -102,54 +95,42 @@ early_in_treatment = {
     # See what the main issue is in terms of how the user has tried to tackle the problem
     '`Great! Let\'s move on to the next step. What are some blockers or challenges that you anticipate in addressing this issue?`': {
         '#GET_EARLY_RESPONSE': {
-                'state': 'early_in_treatment_influence',
-                # See how the problem influences the user and how the user influences the problem
-                '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
-                    '#GET_EARLY_RESPONSE': {
-                            'state': 'early_in_treatment_idea',
-                            # See what the user's idea or theory about what will help is in terms of tackling these issues
-                            '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
-                                '#GET_EARLY_RESPONSE': {
-
-
-'state': 'early_in_treatment_summary',
-    '`Ok` #GET_SUGGESTION `I need to make sure before we move on.`': {
-        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-            '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
-        },
-        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
-            '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {},
-            }
-        },
-        'error': {
-            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {},
-            }
-        }
-    }
-}
-                                                }
-                                            }
-                                        },
+            'state': 'how_problem_influences_user_vice_versa',
+            # See how the problem influences the user and how the user influences the problem
+            '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
+                '#GET_EARLY_RESPONSE': {
+                    'state': 'get_user_ideas_on_what_will_help',
+                    # See what the user's idea or theory about what will help is in terms of tackling these issues
+                    '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
+                        '#GET_EARLY_RESPONSE': {
+                            'state': 'early_in_treatment_summary',
+                            '`Ok` #GET_SUGGESTION `I need to make sure before we move on.`': {
+                                '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+                                    '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
+                                },
+                                '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+                                    '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                        '#GET_PROBLEM_RESPONSE': {},
+                                    }
+                                },
+                                'error': {
+                                    '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                        '#GET_PROBLEM_RESPONSE': {},
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+            },
+        }
+    }
+}
 
+# I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
 
-
-
-            # I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
-
-        # for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
-        # maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
-
-
-
-
-
-
-
+# for tough responses, respond in the dialog flow and then let gpt handle states, but make sure the response is tailored to the user.
+# maybe a macro #GET_GPT_AWKNOWLEDGEMENT that, when mixed with #GET_FILLER_TEXT, will make sure we're not docked points for just straight copying gpt responses.
 
 
 # evaluation

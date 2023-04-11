@@ -40,11 +40,6 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
-available_states_pre = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
-                    'summarize_reiterate_problem']
-
-early_available_states = ['early_in_treatment_influence', 'early_in_treatment_idea',
-                           'early_in_treatment_summary']
 
 def generate_prompt_early(vars: Dict[str, Any]):
     prompt_parts = []
@@ -65,13 +60,16 @@ def generate_prompt_early(vars: Dict[str, Any]):
 
     return prompt
 
+early_available_states = ['how_problem_influences_user_vice_versa', 'get_user_ideas_on_what_will_help',
+                           'early_in_treatment_summary']
+
 def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
     if user['PROBLEM_CHALLENGE'] != 'n/a':
-        vars['PROBLEM_CHALLENGE'] = user['PROBLEM_CHALLENGE']
+        vars['PROBLEM_CHALLENGE'] = f"{vars['PROBLEM_CHALLENGE']}, {user['PROBLEM_CHALLENGE']}" if vars['PROBLEM_CHALLENGE'] != user['PROBLEM_CHALLENGE'] else vars['PROBLEM_CHALLENGE']
     if user['PROBLEM_INFLUENCE'] != 'n/a':
-        vars['PROBLEM_INFLUENCE'] = user['PROBLEM_INFLUENCE']
+        vars['PROBLEM_INFLUENCE'] = f"{vars['PROBLEM_INFLUENCE']}, {user['PROBLEM_INFLUENCE']}" if vars['PROBLEM_INFLUENCE'] != user['PROBLEM_INFLUENCE'] else vars['PROBLEM_INFLUENCE']
     if user['PROBLEM_IDEA'] != 'n/a':
-        vars['PROBLEM_IDEA'] = user['PROBLEM_IDEA']
+        vars['PROBLEM_IDEA'] = f"{vars['PROBLEM_IDEA']}, {user['PROBLEM_IDEA']}" if vars['PROBLEM_IDEA'] != user['PROBLEM_IDEA'] else vars['PROBLEM_IDEA']
 
 
     if 'NEXT_STATE' in user:
@@ -79,6 +77,8 @@ def set_early_response(vars: Dict[str, Any], user: Dict[str, Any]):
             early_available_states.remove(user['NEXT_STATE'])
         vars['__target__'] = f"{user['NEXT_STATE']}"
 
+available_states_pre = ['user_understanding_of_prob',  'attempted_solutions', 'when_problem_not_present',
+                    'summarize_reiterate_problem']
 
 def generate_prompt_pre(vars: Dict[str, Any]):
     prompt_parts = []
