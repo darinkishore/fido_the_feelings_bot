@@ -130,7 +130,7 @@ early_in_treatment = {
                                                                                     '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
                                                                                         '#GET_EARLY_RESPONSE': {
                                                                                             'state': 'early_in_treatment_summary',
-                                                                                            '`Ok, let me summarize what we have discussed so far. `#GET_SUMMARY `Please let me know if I have understood everything correctly.`': {
+                                                                                            '`Ok, let me summarize what we have discussed so far. `#GET_SUGGESTION `Please let me know if I have understood everything correctly.`': {
                                                                                                 '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
                                                                                                     '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
                                                                                                 },
