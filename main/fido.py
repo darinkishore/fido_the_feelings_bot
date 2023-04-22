@@ -180,37 +180,45 @@ post_treatment = {
     'state': 'post_treatment_base',
     '`Do you feel that today\'s session has made a positive impact on your situation?`': {
         '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-            '`Great! Let\'s move on to the next step.`': 'post_treatment_secondary'
+            '`Great! Let\'s move on to the next step.`': {
+                'state': 'post_treatment_secondary',
+                '`Can you identify any specific methods or steps that you found particularly beneficial?`': {
+                    '#GET_PROBLEM_RESPONSE': {
+                        'state': 'post_treatment_tertiary',
+                        '`How would you describe the effectiveness of this session?`': {
+                            '#GET_PROBLEM_RESPONSE': {
+                                'state': 'post_treatment_quaternary',
+                                '`what are some areas that you felt like I fell short in?`': {
+                                    '#GET_PROBLEM_RESPONSE': {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
             '`Can you explain why the session didn\'t positively impact your situation?`': {
-                '#GET_PROBLEM_RESPONSE': {},
+                '#GET_PROBLEM_RESPONSE': {
+                    'state': 'post_treatment_base'
+                }
             }
         },
         'error': {
             '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {},
+                '#GET_PROBLEM_RESPONSE': {
+                    'state': 'post_treatment_base'
+                }
             }
         }
-    },
-
-    'state': 'post_treatment_secondary',
-    '`Can you identify any specific methods or steps that you found particularly beneficial?`': {
-        '#GET_PROBLEM_RESPONSE': 'post_treatment_tertiary'
-    },
-
-    'state': 'post_treatment_tertiary',
-    '`How would you describe the effectiveness of this session?`': {
-        '#GET_PROBLEM_RESPONSE': 'post_treatment_quaternary'
-    },
-
-    'state': 'post_treatment_quaternary',
-    '`what are some areas that you felt like I fell short in?`': {
-        '#GET_PROBLEM_RESPONSE': 'post_treatment_quinary'
-        # maybe add a macro to store this specific response in a list of responses or a sqllite database
-    },
-
+    }
 }
+
+
+
+
+
 
 # we gotta solo implement preparation/action stages, which is where the actual "therapizing" happens
 
