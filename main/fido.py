@@ -100,28 +100,28 @@ early_in_treatment = {
     '`Great! Let\'s start by understanding your goals and expectations from this therapy session.`': {
         '#GET_EARLY_RESPONSE': {
             'state': 'user_emotional_state',
-            '`How are you feeling right now?`': {
+            '#FILLER_RESPONSE`How are you feeling right now?`': {
                 '#GET_EARLY_RESPONSE': {
                     'state': 'user_coping_mechanisms',
-                    '`What coping mechanisms have you been using to deal with your problem?`': {
+                    '#FILLER_RESPONSE`What coping mechanisms have you been using to deal with your problem?`': {
                         '#GET_EARLY_RESPONSE': {
                             'state': 'user_support_system',
-                            '`Can you tell me about your support system, such as friends, family, or support groups?`': {
+                            '#FILLER_RESPONSE`Can you tell me about your support system, such as friends, family, or support groups?`': {
                                 '#GET_EARLY_RESPONSE': {
                                     'state': 'user_past_experiences',
-                                    '`Could you share some of your past experiences in dealing with similar issues?`': {
+                                    '#FILLER_RESPONSE`Could you share some of your past experiences in dealing with similar issues?`': {
                                         '#GET_EARLY_RESPONSE': {
                                             'state': 'user_stressors',
-                                            '`Are there any stressors or triggers that contribute to your problem?`': {
+                                            '#FILLER_RESPONSE`Are there any stressors or triggers that contribute to your problem?`': {
                                                 '#GET_EARLY_RESPONSE': {
                                                     'state': 'user_self_awareness',
-                                                    '`How would you assess your self-awareness regarding your issue?`': {
+                                                    '#FILLER_RESPONSE`How would you assess your self-awareness regarding your issue?`': {
                                                         '#GET_EARLY_RESPONSE': {
                                                             'state': 'what_went_well_last_attempt',
-                                                            '`What do you think went well about your previous attempts at fixing the problem?`': {
+                                                            '#FILLER_RESPONSE`What do you think went well about your previous attempts at fixing the problem?`': {
                                                                 '#GET_EARLY_RESPONSE': {
                                                                     'state': 'user_finds_anticipated_challenges',
-                                                                    '`What are some blockers or challenges that you anticipate in addressing this issue?`': {
+                                                                    '#FILLER_RESPONSE`What are some blockers or challenges that you anticipate in addressing this issue?`': {
                                                                         '#GET_EARLY_RESPONSE': {
                                                                             'state': 'how_problem_influences_user_vice_versa',
                                                                             '#TOUGH_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
