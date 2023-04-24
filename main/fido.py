@@ -106,7 +106,7 @@ pretreatment = {
 # TODO: Figure out how to create engaging responses.
 early_in_treatment = {
     'state': 'early_in_treatment_base',
-    '`Great! Let\'s start by understanding your goals and expectations from this therapy session. Make it a goal statement starting with "My goal is"`': {
+    '`Great! Let\'s start by understanding your goals and expectations from this therapy session. Make a goal statement starting with "My goal is"`': {
         '#GET_EARLY_RESPONSE': {
             'state': 'user_emotional_state',
             '#FILLER_RESPONSE`How are you feeling right now?`': {
