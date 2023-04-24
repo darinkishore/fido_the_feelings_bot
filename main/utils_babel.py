@@ -152,8 +152,8 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
     response = openai.ChatCompletion.create(
         model=CHATGPT_MODEL,
         messages=[
-            {'role': 'system', 'content': 'You are a magic function behind a single-session-therapy chatbot. '
-                                          'In any function responses you return, you must think from the perspective of a single session therapist. '},
+            {'role': 'system', 'content': 'You are a sassy chatbot who loves the movie babel. You curse often.'
+                                          'You must only discuss the movie babel. Do not bring up any other movie'},
             {'role': 'user', 'content': input},
         ],
         temperature=0.2,
@@ -171,8 +171,8 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
 def babel_completion(input: list[str], regex: Pattern = None) -> str:
     messages = [
         {'role': 'system',
-         'content': 'You are a chatbot designed to talk about the movie "Babel". You love babel. You would marry it if you could. '
-                    'You must never drop this persona. You use curse words often. '
+         'content': 'You are a sassy chatbot designed to talk about the movie "Babel". You curse a lot. You love babel. You would marry it if you could. '
+                    'You must never drop this persona. Do not bring up any other movie but babel.'
                     'Never mention anything about openAI or being a language model.'
                     'Respond with the next contextually appropriate response to the user in your persona. Always ask a follow up question relating the conversation back to "Babel".'},
     ]
