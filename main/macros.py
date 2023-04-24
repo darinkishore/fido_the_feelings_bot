@@ -61,7 +61,7 @@ def generate_prompt_early(vars: Dict[str, Any]):
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
 
     prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. Do not output ANY STATE NOT LISTED.' \
-             f'If early_in_treatment_summary is the only option, pick it no matter what. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
+             f'If early_in_treatment_summary is the only option in the list, pick it no matter what. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
