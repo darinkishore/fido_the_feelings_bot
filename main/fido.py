@@ -115,7 +115,7 @@ early_in_treatment = {
                                                                                     '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
                                                                                         '#GET_EARLY_RESPONSE': {
                                                                                             'state': 'early_in_treatment_summary',
-                                                                                            '`Ok, let me summarize what we have discussed so far. `#GET_SUGGESTION `Please let me know if I have understood everything correctly.`': {
+                                                                                            '`Ok, I think I have an idea. `#GET_SUGGESTION `Please let me know if I have understood everything correctly.`': {
                                                                                                 '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
                                                                                                     '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
                                                                                                 },
@@ -125,14 +125,14 @@ early_in_treatment = {
                                                                                                     }
                                                                                                 },
                                                                                                 'error': {
-                                                                                                    '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
+                                                                                                    '`Sorry, I didn\'t get that. If there was something I got wrong let me know, otherwise I\'ll reiterate my suggestion.`': {
                                                                                                         '#GET_EARLY_RESPONSE': {},
                                                                                                     }
                                                                                                 }
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                },
+                                                                                }
                                                                             }
                                                                         }
                                                                     },
