@@ -102,24 +102,9 @@ early_in_treatment = {
             'state': 'user_emotional_state',
             '#FILLER_RESPONSE`How are you feeling right now?`': {
                 '#GET_EARLY_RESPONSE': {
-                    'state': 'user_coping_mechanisms',
-                    '#FILLER_RESPONSE`What coping mechanisms have you been using to deal with your problem?`': {
-                        '#GET_EARLY_RESPONSE': {
                             'state': 'user_support_system',
-                            '#FILLER_RESPONSE`Can you tell me about your support system, such as friends, family, or support groups?`': {
+                            '#FILLER_RESPONSE`It can be helpful to have people you trust to talk to. Who would you say that is for you currently?`': {
                                 '#GET_EARLY_RESPONSE': {
-                                    'state': 'user_past_experiences',
-                                    '#FILLER_RESPONSE`Could you share some of your past experiences in dealing with similar issues?`': {
-                                        '#GET_EARLY_RESPONSE': {
-                                            'state': 'user_stressors',
-                                            '#FILLER_RESPONSE`Are there any stressors or triggers that contribute to your problem?`': {
-                                                '#GET_EARLY_RESPONSE': {
-                                                    'state': 'user_self_awareness',
-                                                    '#FILLER_RESPONSE`How would you assess your self-awareness regarding your issue?`': {
-                                                        '#GET_EARLY_RESPONSE': {
-                                                            'state': 'what_went_well_last_attempt',
-                                                            '#FILLER_RESPONSE`What do you think went well about your previous attempts at fixing the problem?`': {
-                                                                '#GET_EARLY_RESPONSE': {
                                                                     'state': 'user_finds_anticipated_challenges',
                                                                     '#FILLER_RESPONSE`What are some blockers or challenges that you anticipate in addressing this issue?`': {
                                                                         '#GET_EARLY_RESPONSE': {
@@ -157,17 +142,17 @@ early_in_treatment = {
                                                     }
                                                 }
                                             }
-                                        },
-                                    }
-                                }
-                            }
-                        },
-                    }
-                }
-            },
-        }
-    }
-}
+                                        }
+
+
+
+
+
+
+
+
+
+
 
 # I feel like that this is okay to leave here, in general it should be a good response for most issues that the user is facing.
 
@@ -230,7 +215,7 @@ df.local_transitions(early_in_treatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    df.run(debugging=True)
+    df.run(debugging=False)
 
 
 """

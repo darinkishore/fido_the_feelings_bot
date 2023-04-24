@@ -43,13 +43,12 @@ def set_summary(vars: Dict[str, Any], user: Dict[str, Any]):
     vars['SUMMARY'] = user['SUMMARY']
 
 
-early_available_states = ['user_emotional_state', 'user_coping_mechanisms', 'user_support_system', 'user_past_experiences',
-                         'user_stressors', 'user_self_awareness',
-                          'what_went_well_last_attempt', 'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
+early_available_states = ['user_emotional_state',  'user_support_system',
+                           'user_finds_anticipated_challenges', 'how_problem_influences_user_vice_versa',
                           'get_user_ideas_on_what_will_help', 'early_in_treatment_summary']
 
-early_vars = ['EMOTIONAL_STATE', 'COPING_MECHANISMS', 'SUPPORT_SYSTEM', 'PAST_EXPERIENCES', 'STRESSORS', 'SELF_AWARENESS',
-              'ATTEMPTS_FIXING_PROBLEM', 'FINDS_ANTICIPATED_CHALLENGES', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA',
+early_vars = ['EMOTIONAL_STATE',  'SUPPORT_SYSTEM',
+               'FINDS_ANTICIPATED_CHALLENGES', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA',
               'USER_IDEAS_ON_WHAT_WILL_HELP', 'GOALS_FROM_THERAPY']
 
 
@@ -61,8 +60,8 @@ def generate_prompt_early(vars: Dict[str, Any]):
 
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in early_available_states) + "}"}')
 
-    prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
-             f'provide a summary. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
+    prompt = f'Please provide the missing information and choose the next logically best state from the given options. You may ONLY choose from the given options. Do not output ANY STATE NOT LISTED.' \
+             f'If early_in_treatment_summary is the only option, pick it no matter what. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
@@ -155,12 +154,12 @@ macros = {
     ),
     'GET_EARLY_RESPONSE': MacroGPTJSONNLG(
         generate_prompt_early,
-        {'EMOTIONAL_STATE': 'happy', 'COPING_MECHANISMS': 'meditation', 'SUPPORT_SYSTEM': 'family', 'PAST_EXPERIENCES': 'feels prepared by past', 'STRESSORS': 'workload, environment', 'SELF_AWARENESS': 'is self aware',
-              'ATTEMPTS_FIXING_PROBLEM': 'it was relaxing', 'FINDS_ANTICIPATED_CHALLENGES': 'lack motivation', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'ruining home life',
+        {'EMOTIONAL_STATE': 'happy', 'SUPPORT_SYSTEM': 'family',
+               'FINDS_ANTICIPATED_CHALLENGES': 'lack motivation', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'ruining home life',
               'USER_IDEAS_ON_WHAT_WILL_HELP': 'dividing workload', 'GOALS_FROM_THERAPY': 'learn time management strategies',
          'NEXT_STATE': '...'},
-        {'EMOTIONAL_STATE': 'n/a', 'COPING_MECHANISMS': 'n/a', 'SUPPORT_SYSTEM': 'n/a/', 'PAST_EXPERIENCES': 'n/a', 'STRESSORS': 'n/a', 'SELF_AWARENESS': 'n/a',
-              'ATTEMPTS_FIXING_PROBLEM': 'n/a', 'FINDS_ANTICIPATED_CHALLENGES': 'n/a', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'n/a',
+        {'EMOTIONAL_STATE': 'n/a', 'SUPPORT_SYSTEM': 'n/a/',
+               'FINDS_ANTICIPATED_CHALLENGES': 'n/a', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'n/a',
               'USER_IDEAS_ON_WHAT_WILL_HELP': 'n/a', 'GOALS_FROM_THERAPY': 'n/a',
          'NEXT_STATE': '...'},
         set_early_response
