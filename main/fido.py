@@ -70,10 +70,19 @@ pretreatment = {
                                 }
                             }
 
+                        },
+                        'error': {
+                            '`I\'m sorry I didn\'t get that. I\'ll ask again.`': 'when_problem_not_present'
                         }
                     }
                 },
+                'error': {
+                    '`I\'m sorry I didn\t get that. I\'ll ask again`': 'attempted_solutions'
+                }
             }
+        },
+        'error':{
+            '`I\'m sorry I didn\t get that. I\'ll ask again`': 'user_understanding_of_prob'
         }
     },
 }
@@ -97,7 +106,7 @@ pretreatment = {
 # TODO: Figure out how to create engaging responses.
 early_in_treatment = {
     'state': 'early_in_treatment_base',
-    '`Great! Let\'s start by understanding your goals and expectations from this therapy session.`': {
+    '`Great! Let\'s start by understanding your goals and expectations from this therapy session. Make it a goal statement starting with "My goal is"`': {
         '#GET_EARLY_RESPONSE': {
             'state': 'user_emotional_state',
             '#FILLER_RESPONSE`How are you feeling right now?`': {
@@ -130,16 +139,34 @@ early_in_treatment = {
                                                                                                     }
                                                                                                 }
                                                                                             }
+                                                                                        },
+                                                                                        'error':{
+                                                                                            '`I\'m sorry I didn\t get that. I\'ll ask again`': 'get_user_ideas_on_what_will_help'
                                                                                         }
                                                                                     }
+                                                                                },
+                                                                                'error':{
+                                                                                    '`I\'m sorry I didn\t get that. I\'ll ask again`': 'how_problem_influences_user_vice_versa'
                                                                                 }
                                                                             }
+                                                                        },
+                                                                        'error':{
+                                                                            '`I\'m sorry I didn\t get that. I\'ll ask again`': 'user_finds_anticipated_challenges'
                                                                         }
-                                                                    },
+                                                                    }
+                                                                },
+                                                                'error':{
+                                                                    '`I\'m sorry I didn\t get that. I\'ll ask again`': 'user_support_system'
                                                                 }
                                                             }
                                                         },
+                                                        'error':{
+                                                            '`I\'m sorry I didn\t get that. I\'ll ask again`': 'user_emotional_state'
+                                                        }
                                                     }
+                                                },
+                                                'error':{
+                                                    '`I\'m sorry I didn\t get that. I\'ll ask again`': 'early_in_treatment_base'
                                                 }
                                             }
                                         }
@@ -212,7 +239,7 @@ df.local_transitions(post_treatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    df.run(debugging=False)
+    df.run(debugging=True)
 
 
 """

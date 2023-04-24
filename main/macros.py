@@ -102,7 +102,7 @@ def generate_prompt_pre(vars: Dict[str, Any]):
     prompt_parts.append(f'"NEXT_STATE": {"{" + ", ".join(f"{state}" for state in available_states_pre) + "}"}')
 
     prompt = f'Please provide the missing information and choose only ONE next logically best state from the given options. You may ONLY choose from the given options. If no state seems best,' \
-             f'summarize and reiterate the problem. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
+             f'summarize and reiterate the problem. If summarize_reiterate_problem is the only option in the list, pick it no matter what. IF ALL INFORMATION IS NOT COLLECTED, UNDER NO CIRCUMSTANCES SHOULD YOU GO TO THE SUMMARY STATE.' \
              f'Respond in the one-line JSON format such as {{{", ".join(prompt_parts)}}}: '
 
     return prompt
@@ -156,7 +156,7 @@ macros = {
         generate_prompt_early,
         {'EMOTIONAL_STATE': 'happy', 'SUPPORT_SYSTEM': 'family',
                'FINDS_ANTICIPATED_CHALLENGES': 'lack motivation', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'ruining home life',
-              'USER_IDEAS_ON_WHAT_WILL_HELP': 'dividing workload', 'GOALS_FROM_THERAPY': 'learn time management strategies',
+              'USER_IDEAS_ON_WHAT_WILL_HELP': 'dividing workload', 'GOALS_FROM_THERAPY': 'learn time management strategies, improve skills, feel better, overcome adversity',
          'NEXT_STATE': '...'},
         {'EMOTIONAL_STATE': 'n/a', 'SUPPORT_SYSTEM': 'n/a/',
                'FINDS_ANTICIPATED_CHALLENGES': 'n/a', 'HOW_PROBLEM_INFLUENCES_USER_VICE_VERSA': 'n/a',
