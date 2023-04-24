@@ -239,7 +239,7 @@ df.local_transitions(post_treatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
-    df.run(debugging=True)
+    df.run(debugging=False)
 
 
 """
