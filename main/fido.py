@@ -125,12 +125,14 @@ early_in_treatment = {
                                                                                         '#GET_EARLY_RESPONSE': {
                                                                                             'state': 'early_in_treatment_summary',
                                                                                             '`Ok, I think I have an idea. `#GET_SUGGESTION `Please let me know if I have understood everything correctly.`': {
-                                                                                                '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
+                                                                                                '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {\
                                                                                                     '`Great! Let\'s move on to the next step.`': 'post_treatment_base'
                                                                                                 },
                                                                                                 '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
                                                                                                     '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                                                                                        '#GET_EARLY_RESPONSE': {},
+                                                                                                        '#GET_EARLY_RESPONSE': {
+
+                                                                                                        },
                                                                                                     }
                                                                                                 },
                                                                                                 'error': {

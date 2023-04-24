@@ -156,7 +156,7 @@ def gpt_completion(input: str, regex: Pattern = None) -> str:
                                           'In any function responses you return, you must think from the perspective of a single session therapist. '},
             {'role': 'user', 'content': input},
         ],
-        temperature=0.4,
+        temperature=0.2,
 
     )
     output = response['choices'][0]['message']['content'].strip()
