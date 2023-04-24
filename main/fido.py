@@ -118,7 +118,7 @@ early_in_treatment = {
                                                                     '#FILLER_RESPONSE`What are some blockers or challenges that you anticipate in addressing this issue?`': {
                                                                         '#GET_EARLY_RESPONSE': {
                                                                             'state': 'how_problem_influences_user_vice_versa',
-                                                                            '#FILLER_RESPONSE`When and how does the problem influence you; and when do you influence it?`': {
+                                                                            '#FILLER_RESPONSE`When and how does the problem influence you?`': {
                                                                                 '#GET_EARLY_RESPONSE': {
                                                                                     'state': 'get_user_ideas_on_what_will_help',
                                                                                     '#FILLER_RESPONSE`What\'s your ideas or theories about what will help?`': {
