@@ -35,18 +35,14 @@ CHATGPT_MODEL = 'gpt-4'
 class MacroMakeFillerText(Macro):
     def run(self, ngrams: Ngrams, vars: Dict[str, Any], args: List[Any]):
         filler_text = ['Got it. That makes sense.',
-                       "I understand where you're coming from.",
-                       "That's a valid perspective.",
+                       "I understand.",
                        "I'm here to support you.",
                        "I'm listening",
                        "I hear you.",
-                       "That's a complex issue.",
                        "I appreciate you sharing that with me.",
                        "I appreciate your honesty.",
                        "Thank you for trusting me with that.",
                        "It's understandable to feel that way.",
-                       "That's a common issue.",
-                       "It's important to be patient with yourself.",
                        "'Thanks for trusting me with your story."]
         return random.choice(filler_text)
 
