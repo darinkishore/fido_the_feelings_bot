@@ -37,13 +37,12 @@ class MacroMakeFillerText(Macro):
         filler_text = ['Got it. That makes sense.',
                        "I understand.",
                        "I'm here to support you.",
-                       "I'm listening",
+                       "I'm listening.",
                        "I hear you.",
                        "I appreciate you sharing that with me.",
                        "I appreciate your honesty.",
                        "Thank you for trusting me with that.",
-                       "It's understandable to feel that way.",
-                       "'Thanks for trusting me with your story."]
+                       "Thanks for trusting me with your story."]
         return random.choice(filler_text)
 
 

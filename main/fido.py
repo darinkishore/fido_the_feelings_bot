@@ -121,12 +121,12 @@ early_in_treatment = {
                                                                                                 },
                                                                                                 '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
                                                                                                     '`No worries! Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                                                                                        '#GET_PROBLEM_RESPONSE': {},
+                                                                                                        '#GET_EARLY_RESPONSE': {},
                                                                                                     }
                                                                                                 },
                                                                                                 'error': {
                                                                                                     '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                                                                                                        '#GET_PROBLEM_RESPONSE': {},
+                                                                                                        '#GET_EARLY_RESPONSE': {},
                                                                                                     }
                                                                                                 }
                                                                                             }
@@ -164,41 +164,37 @@ early_in_treatment = {
 post_treatment = {
     'state': 'post_treatment_base',
     '`Do you feel that today\'s session has made a positive impact on your situation?`': {
-        '[{yes, yeah, correct, right, yuh, yep, yeap, yup}]': {
-            '`Great! Let\'s move on to the next step.`': {
-                'state': 'post_treatment_secondary',
-                '`Can you identify any specific methods or steps that you found particularly beneficial?`': {
-                    '#GET_PROBLEM_RESPONSE': {
-                        'state': 'post_treatment_tertiary',
-                        '`How would you describe the effectiveness of this session?`': {
-                            '#GET_PROBLEM_RESPONSE': {
-                                'state': 'post_treatment_quaternary',
-                                '`what are some areas that you felt like I fell short in?`': {
-                                    '#GET_PROBLEM_RESPONSE': {
-                                    }
+        '[{yes, yeah, correct, right, yuh, yep, yeap, yup, I do}]': {
+            '`I\'m glad to hear it! I think if you follow my suggestion, you\'ll be well on your way to solving your problem!`': {
+                'error': {
+                '`Happy I could help! Have a good day, and feel free to chat again sometime :)`': 'end'
+
                                 }
                             }
                         }
+                    },
+
+
+
+
+        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
+            '`Can you explain why the session didn\'t positively impact your situation?`': {
+                '`I\'m sorry to hear that. If you are still having trouble I recommend reaching out to some professional resources. I\'m still a young chat bot and learning to handle these issues. Let me know if you need anything else.`': {
+                    'error':{
+                        '`Have a good day, I\'m sorry I wasn\'t more helpful. Feel free to talk again!`': 'end'
                     }
                 }
             }
         },
-        '[{no, nope, not really, not at all, nah, incorrect, not correct, not right}]': {
-            '`Can you explain why the session didn\'t positively impact your situation?`': {
-                '#GET_PROBLEM_RESPONSE': {
-                    'state': 'post_treatment_base'
-                }
-            }
-        },
         'error': {
-            '`Sorry, I didn\'t get that. Can you please tell me what I didn\'t get right, and what I should have understood?`': {
-                '#GET_PROBLEM_RESPONSE': {
-                    'state': 'post_treatment_base'
+            '`Sorry, I didn\'t get that.`': {
+                'state': 'post_treatment_base'
+
                 }
             }
         }
-    }
-}
+
+
 
 
 
@@ -212,6 +208,7 @@ df = DialogueFlow('start', end_state='end')
 df.local_transitions(introduction)
 df.local_transitions(pretreatment)
 df.local_transitions(early_in_treatment)
+df.local_transitions(post_treatment)
 df.add_macros(macros)
 
 if __name__ == '__main__':
